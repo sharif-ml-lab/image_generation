@@ -1,0 +1,3 @@
+- Alignment
+- Diversity
+- Quiality
