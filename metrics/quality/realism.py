@@ -1,0 +1,21 @@
+import cv2
+import numpy as np
+from skimage.feature import greycomatrix, greycoprops
+
+def compute_glcm(image_path):
+    image = cv2.imread(image_path, 0)
+    image = cv2.resize(image, (100, 100))  
+    glcm = greycomatrix(image, distances=[1], angles=[0, np.pi/4, np.pi/2, 3*np.pi/4], levels=256, symmetric=True, normed=True)
+    contrast = greycoprops(glcm, 'contrast')
+    dissimilarity = greycoprops(glcm, 'dissimilarity')
+    homogeneity = greycoprops(glcm, 'homogeneity')
+    energy = greycoprops(glcm, 'energy')
+    correlation = greycoprops(glcm, 'correlation')
+
+    return {
+        'contrast': contrast,
+        'dissimilarity': dissimilarity,
+        'homogeneity': homogeneity,
+        'energy': energy,
+        'correlation': correlation
+    }

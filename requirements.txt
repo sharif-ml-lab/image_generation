@@ -1,0 +1,7 @@
+scikit-image
+torchvision
+torch
+pillow
+numpy 
+pandas
+scipy 
