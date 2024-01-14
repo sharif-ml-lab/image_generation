@@ -29,3 +29,11 @@ def compute_canny_edge_density(image_path):
     total_pixels = image.shape[0] * image.shape[1]
     edge_density = edge_pixels / total_pixels
     return edge_density
+
+
+def compute_variance_of_laplacian(image_path):
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    laplacian = cv2.Laplacian(image, cv2.CV_64F)
+    variance = laplacian.var()
+    return variance
+
