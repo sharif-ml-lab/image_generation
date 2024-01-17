@@ -4,6 +4,7 @@ from torchvision import models
 from utils.load import Loader
 from metrics.quality.inception import calculate_inception_score
 from metrics.quality.frechet import calculate_frechet_inception_distance
+from metrics.diversity.perceptual import calculate_learned_perceptual_similarity
 from torchvision.models import Inception_V3_Weights
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -12,18 +13,24 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 def inception_handler(gpath):
     weights = Inception_V3_Weights.IMAGENET1K_V1 
     inception_model = models.inception_v3(weights=weights).to(DEVICE)
-    generated_dataset = Loader.load(gpath, 32)
+    generated_dataset = Loader.load(gpath, batch_size=1)
     mean_is, std_is = calculate_inception_score(generated_dataset, inception_model)
-    print(f"Inception Score: {mean_is}, Standard Deviation: {std_is}")
+    print(f"Mean Inception Score: {mean_is}, Standard Deviation: {std_is}")
 
 
 def frechet_handler(gpath, rpath):
     weights = Inception_V3_Weights.IMAGENET1K_V1 
     inception_model = models.inception_v3(weights=weights).to(DEVICE)
-    generated_dataset = Loader.load(gpath, 32)
-    real_dataset = Loader.load(rpath, 32)
+    generated_dataset = Loader.load(gpath, batch_size=1)
+    real_dataset = Loader.load(rpath, batch_size=1)
     fid_score = calculate_frechet_inception_distance(real_dataset, generated_dataset, inception_model)
     print(f"Frechet Inception Distance: {fid_score}")
+
+
+def perceptual_handler(gpath):
+    generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
+    mean_lpips, std_lpips = calculate_learned_perceptual_similarity(generated_dataset)
+    print(f"Mean Perceptual Similarity: {mean_lpips}, Standard Deviation: {std_lpips}")
 
 
 def main(space, task, gpath, rpath):
@@ -32,6 +39,10 @@ def main(space, task, gpath, rpath):
             inception_handler(gpath)
         elif task == 'frechet':
             frechet_handler(gpath, rpath)
+    elif space == 'diversity':
+        if task == 'perceptual':
+            perceptual_handler(gpath)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Sharif ML-Lab Data Generation ToolKit")

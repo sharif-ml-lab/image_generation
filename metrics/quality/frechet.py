@@ -2,6 +2,7 @@ import torch
 import numpy as np
 from scipy import linalg
 
+
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 def calculate_frechet_inception_distance(loader_real, loader_fake, inception_model):

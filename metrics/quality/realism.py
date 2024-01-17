@@ -37,3 +37,8 @@ def compute_variance_of_laplacian(image_path):
     variance = laplacian.var()
     return variance
 
+
+def compute_mean_spectrum(image_path):
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    mean_spectrum = np.mean(image, axis=0)
+    return mean_spectrum
