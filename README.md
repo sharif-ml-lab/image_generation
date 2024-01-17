@@ -11,8 +11,8 @@ Clip Score
 `py main.py --space alignment --task clip --gpath utils/test/generated`
 
 Perceptual Score
-- `py main.py --space diversity --task perceptual --gpath utils/test/generated`
+`py main.py --space diversity --task perceptual --gpath utils/test/generated`
 
 
 ### Commit Guide
-- Please Use `black .` Before Pushing 
+Please Use `black .` Before Pushing 
