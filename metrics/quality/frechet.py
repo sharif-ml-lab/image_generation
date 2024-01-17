@@ -5,6 +5,7 @@ from scipy import linalg
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+
 def calculate_frechet_inception_distance(loader_real, loader_fake, inception_model):
     inception_model.eval()
 
@@ -25,8 +26,12 @@ def calculate_frechet_inception_distance(loader_real, loader_fake, inception_mod
     real_features = torch.cat(real_features, 0).cpu().numpy()
     fake_features = torch.cat(fake_features, 0).cpu().numpy()
 
-    mu_real, sigma_real = real_features.mean(axis=0), np.cov(real_features, rowvar=False)
-    mu_fake, sigma_fake = fake_features.mean(axis=0), np.cov(fake_features, rowvar=False)
+    mu_real, sigma_real = real_features.mean(axis=0), np.cov(
+        real_features, rowvar=False
+    )
+    mu_fake, sigma_fake = fake_features.mean(axis=0), np.cov(
+        fake_features, rowvar=False
+    )
 
     ssdiff = np.sum((mu_real - mu_fake) ** 2.0)
 
