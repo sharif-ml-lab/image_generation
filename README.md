@@ -1,18 +1,24 @@
 # Image Generation
 
+
 ### Metric CLI
+`./main.py --space <metric_type> --task <metric_name> --gpath <generated_path> [--rpath <real_path>]`
+
+
 Inception Score
-`py main.py --space metric --task inception --gpath utils/test/generated`
+- `--space quality --task inception`
 
 Frechet Score
-`py main.py --space metric --task frechet --gpath utils/test/generated --rpath utils/test/generated`
+- `--space quality --task frechet`
 
 Clip Score
-`py main.py --space alignment --task clip --gpath utils/test/generated`
+- `--space alignment --task clip`
+
 
 Perceptual Score
-`py main.py --space diversity --task perceptual --gpath utils/test/generated`
+- `--space diversity --task perceptual`
 
+-------
 
 ### Commit Guide
 Please Use `black .` Before Pushing 
