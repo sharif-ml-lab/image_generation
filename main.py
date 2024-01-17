@@ -5,6 +5,7 @@ from utils.load import Loader
 from metrics.quality.inception import calculate_inception_score
 from metrics.quality.frechet import calculate_frechet_inception_distance
 from metrics.diversity.perceptual import calculate_learned_perceptual_similarity
+from metrics.alignment.clip import calculate_clip_similarity
 from torchvision.models import Inception_V3_Weights
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -35,6 +36,14 @@ def perceptual_handler(gpath):
     print(f"Mean Perceptual Similarity: {mean_lpips}, Standard Deviation: {std_lpips}")
 
 
+def clip_handler(gpath):
+    generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
+    mean_cosine, std_cosine = calculate_clip_similarity(generated_dataset)
+    print(
+        f"Mean Clip Cosine Similarity: {mean_cosine}, Standard Deviation: {std_cosine}"
+    )
+
+
 def main(space, task, gpath, rpath):
     if space == "metric":
         if task == "inception":
@@ -44,6 +53,9 @@ def main(space, task, gpath, rpath):
     elif space == "diversity":
         if task == "perceptual":
             perceptual_handler(gpath)
+    elif space == "alignment":
+        if task == "clip":
+            clip_handler(gpath)
 
 
 if __name__ == "__main__":
