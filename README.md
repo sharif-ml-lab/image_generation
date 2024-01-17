@@ -5,4 +5,4 @@
 
 
 ### Commit Guide
-- Please User `black .` Before Pushing 
+- Please Use `black .` Before Pushing 
