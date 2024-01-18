@@ -4,6 +4,7 @@ from torchvision import models
 from utils.load import Loader
 from metrics.quality.inception import calculate_inception_score
 from metrics.quality.frechet import calculate_frechet_inception_distance
+from metrics.quality.realism import calculate_realism_score
 from metrics.diversity.perceptual import calculate_learned_perceptual_similarity
 from metrics.alignment.clip import calculate_clip_similarity
 from torchvision.models import Inception_V3_Weights
@@ -30,6 +31,12 @@ def frechet_handler(gpath, rpath):
     print(f"Frechet Inception Distance: {fid_score}")
 
 
+def realism_handler(gpath):
+    generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
+    mean_real, std_real = calculate_realism_score(generated_dataset)
+    print(f"Mean Realism Score: {mean_real}, Standard Deviation: {std_real}")
+
+
 def perceptual_handler(gpath):
     generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
     mean_lpips, std_lpips = calculate_learned_perceptual_similarity(generated_dataset)
@@ -39,17 +46,17 @@ def perceptual_handler(gpath):
 def clip_handler(gpath):
     generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
     mean_cosine, std_cosine = calculate_clip_similarity(generated_dataset)
-    print(
-        f"Mean Clip Cosine Similarity: {mean_cosine}, Standard Deviation: {std_cosine}"
-    )
+    print(f"Mean Clip Similarity: {mean_cosine}, Standard Deviation: {std_cosine}")
 
 
 def main(space, task, gpath, rpath):
-    if space == "metric":
+    if space == "quality":
         if task == "inception":
             inception_handler(gpath)
         elif task == "frechet":
             frechet_handler(gpath, rpath)
+        elif task == "realism":
+            realism_handler(gpath)
     elif space == "diversity":
         if task == "perceptual":
             perceptual_handler(gpath)
