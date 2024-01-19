@@ -14,6 +14,9 @@ Frechet Score
 Clip Score
 - `--space alignment --task clip`
 
+VQA Responses
+- `--space alignemnt --task vqa --model <model_name>`
+
 
 Perceptual Score
 - `--space diversity --task perceptual`
