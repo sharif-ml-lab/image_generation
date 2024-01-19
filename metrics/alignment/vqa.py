@@ -31,7 +31,7 @@ def vqa_blip(image, text, model):
         "capfilt_large": "Salesforce/blip-vqa-capfilt-large",
     }
     processor = BlipProcessor.from_pretrained(MODEL_CHECKPOINT[model])
-    if 'flan' in model:
+    if "flan" in model:
         model = Blip2ForConditionalGeneration.from_pretrained(MODEL_CHECKPOINT[model])
     else:
         model = BlipForQuestionAnswering.from_pretrained(MODEL_CHECKPOINT[model])
@@ -60,5 +60,5 @@ def vqa_alignment_metric(loader_fake, model="vlit"):
                 answer = vqa_git_large(pill_fake, text)
             else:
                 answer = vqa_blip(pill_fake, text, model=model)
-            responses[-1].append(text + ' ' + answer)
+            responses[-1].append(text + " " + answer)
     return responses
