@@ -46,7 +46,7 @@ def vqa_alignment_metric(loader_fake, model="vlit", subject="man", relation="dri
     scores = []
     questions = [
         [f"Who is {relation}?", subject],
-        [f"The man is {relation} or the woman?", subject]
+        [f"The man is {relation} or the woman?", subject],
     ]
     for fake_batch in loader_fake:
         pill_fake = transforms.ToPILImage()(fake_batch[0])
