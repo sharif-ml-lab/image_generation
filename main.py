@@ -52,8 +52,8 @@ def clip_handler(gpath):
 
 def vqa_handler(gpath, model):
     generated_dataset = Loader.load(gpath, batch_size=1)
-    responses = vqa_alignment_metric(generated_dataset, model)
-    print(f"Responses: {responses}")
+    mean_vqa, std_vqa = vqa_alignment_metric(generated_dataset, model)
+    print(f"Mean VQA Score: {mean_vqa}, Standard Deviation: {std_vqa}")
 
 
 def main(space, task, gpath, rpath, model):

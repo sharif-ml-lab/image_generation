@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 import torchvision.transforms as transforms
 from transformers import (
     ViltProcessor,
@@ -41,24 +42,23 @@ def vqa_blip(image, text, model):
     return processor.decode(output[0], skip_special_tokens=True)
 
 
-def vqa_alignment_metric(loader_fake, model="vlit"):
-    responses = []
+def vqa_alignment_metric(loader_fake, model="vlit", subject="man", relation="driving"):
+    scores = []
     questions = [
-        "What activity is the woman in the image doing?",
-        "What activity is the man in the image doing?",
-        "The man is driving or the woman?",
-        "Is the image realistic or fake?",
-        "What is the color of car?",
+        [f"Who is {relation}?", subject],
+        [f"The man is {relation} or the woman?", subject]
     ]
     for fake_batch in loader_fake:
-        responses.append([])
         pill_fake = transforms.ToPILImage()(fake_batch[0])
-        for text in questions:
+        total = 0
+        for text, expected in questions:
             if model == "vlit":
                 answer = vqa_vilt_base(pill_fake, text)
             elif model == "git":
                 answer = vqa_git_large(pill_fake, text)
             else:
                 answer = vqa_blip(pill_fake, text, model=model)
-            responses[-1].append(text + " " + answer)
-    return responses
+            total += int(expected in answer.split())
+        scores.append(total / 2)
+    scores_array = np.array(scores)
+    return scores_array.mean(), scores_array.std()
