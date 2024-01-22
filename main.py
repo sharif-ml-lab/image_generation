@@ -8,6 +8,7 @@ from metrics.quality.realism import calculate_realism_score
 from metrics.diversity.perceptual import calculate_learned_perceptual_similarity
 from metrics.alignment.clip import calculate_clip_similarity
 from metrics.alignment.vqa import vqa_alignment_metric
+from metrics.diversity.novelty import calculate_novelty_similarity
 from torchvision.models import Inception_V3_Weights
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -44,6 +45,12 @@ def perceptual_handler(gpath):
     print(f"Mean Perceptual Similarity: {mean_lpips}, Standard Deviation: {std_lpips}")
 
 
+def novelty_handler(gpath):
+    generated_dataset = Loader.load(gpath, batch_size=1)
+    mean_lpips, std_lpips = calculate_novelty_similarity(generated_dataset)
+    print(f"Mean Cosine Similarity: {mean_lpips}, Standard Deviation: {std_lpips}")
+
+
 def clip_handler(gpath):
     generated_dataset = Loader.load(gpath, batch_size=1)
     mean_cosine, std_cosine = calculate_clip_similarity(generated_dataset)
@@ -67,6 +74,8 @@ def main(space, task, gpath, rpath, model):
     elif space == "diversity":
         if task == "perceptual":
             perceptual_handler(gpath)
+        if task == "novelty":
+            novelty_handler(gpath)
     elif space == "alignment":
         if task == "clip":
             clip_handler(gpath)
