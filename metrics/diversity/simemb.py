@@ -8,7 +8,7 @@ from transformers import AutoImageProcessor, Swinv2Model
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-def calculate_novelty_similarity(loader_fake):
+def calculate_simemb_similarity(loader_fake):
     image_processor = AutoImageProcessor.from_pretrained(
         "microsoft/swinv2-tiny-patch4-window8-256"
     )
@@ -37,6 +37,6 @@ def compute_pairwise_similarity(embedding_list):
                 similarity_matrix[i, j] = 1 - F.cosine_similarity(emb1, emb2)
 
     flat = similarity_matrix.ravel()
-    flat_non_inf = flat[flat != 0]
+    flat_non_zero = flat[flat != 0]
 
-    return flat_non_inf.mean(), flat_non_inf.std()
+    return flat_non_zero.mean(), flat_non_zero.std()
