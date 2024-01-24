@@ -8,3 +8,4 @@ scipy
 torchmetrics
 torchvision
 opencv-python
+datasets

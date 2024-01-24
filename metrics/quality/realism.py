@@ -91,6 +91,5 @@ def calculate_realism_score(loader_fake):
     for fake_batch in loader_fake:
         fake = get_image_array(fake_batch[0])
         scores.append(compute_realism_score(fake))
-    print(scores)
     scores_array = np.array(scores)
     return scores_array.mean(), scores_array.std()
