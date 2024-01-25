@@ -8,6 +8,8 @@ from metrics.quality.realism import calculate_realism_score
 from metrics.diversity.perceptual import calculate_learned_perceptual_similarity
 from metrics.alignment.clip import calculate_clip_similarity
 from metrics.alignment.captioning import calculate_captioning_similarity
+from metrics.alignment.vqa import vqa_alignment_metric
+from metrics.diversity.simemb import calculate_simemb_similarity
 from torchvision.models import Inception_V3_Weights
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -39,13 +41,19 @@ def realism_handler(gpath):
 
 
 def perceptual_handler(gpath):
-    generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
+    generated_dataset = Loader.load(gpath, batch_size=1)
     mean_lpips, std_lpips = calculate_learned_perceptual_similarity(generated_dataset)
     print(f"Mean Perceptual Similarity: {mean_lpips}, Standard Deviation: {std_lpips}")
 
 
+def simemb_handler(gpath):
+    generated_dataset = Loader.load(gpath, batch_size=1)
+    mean_cosine, std_cosine = calculate_simemb_similarity(generated_dataset)
+    print(f"Mean Cosine Similarity: {mean_cosine}, Standard Deviation: {std_cosine}")
+
+
 def clip_handler(gpath):
-    generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
+    generated_dataset = Loader.load(gpath, batch_size=1)
     mean_cosine, std_cosine = calculate_clip_similarity(generated_dataset)
     print(f"Mean Clip Similarity: {mean_cosine}, Standard Deviation: {std_cosine}")
 
@@ -58,7 +66,13 @@ def captioning_handler(gpath, cpath):
     )
 
 
-def main(space, task, gpath, rpath, cpath):
+def vqa_handler(gpath, model):
+    generated_dataset = Loader.load(gpath, batch_size=1)
+    mean_vqa, std_vqa = vqa_alignment_metric(generated_dataset, model)
+    print(f"Mean VQA Score: {mean_vqa}, Standard Deviation: {std_vqa}")
+
+
+def main(space, task, gpath, rpath, model, cpath):
     if space == "quality":
         if task == "inception":
             inception_handler(gpath)
@@ -69,11 +83,15 @@ def main(space, task, gpath, rpath, cpath):
     elif space == "diversity":
         if task == "perceptual":
             perceptual_handler(gpath)
+        if task == "simemb":
+            simemb_handler(gpath)
     elif space == "alignment":
         if task == "clip":
             clip_handler(gpath)
-        if task == "captioning":
+        elif task == "captioning":
             captioning_handler(gpath, cpath)
+        elif task == "vqa":
+            vqa_handler(gpath, model)
 
 
 if __name__ == "__main__":
@@ -95,7 +113,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "-rp", "--rpath", type=str, required=False, help="Real Data Path"
     )
-
+    parser.add_argument("-m", "--model", type=str, required=False, help="Model Name")
     args = parser.parse_args()
-    print(args)
     main(**vars(args))
