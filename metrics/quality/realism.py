@@ -7,6 +7,7 @@ from skimage.feature import graycomatrix, graycoprops
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+
 def compute_glcm(image):
     image = cv2.resize(image, (500, 500))  # HyperParameter
     glcm = graycomatrix(

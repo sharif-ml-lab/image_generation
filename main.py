@@ -7,6 +7,7 @@ from metrics.quality.frechet import calculate_frechet_inception_distance
 from metrics.quality.realism import calculate_realism_score
 from metrics.diversity.perceptual import calculate_learned_perceptual_similarity
 from metrics.alignment.clip import calculate_clip_similarity
+from metrics.alignment.captioning import calculate_captioning_similarity
 from torchvision.models import Inception_V3_Weights
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -49,7 +50,15 @@ def clip_handler(gpath):
     print(f"Mean Clip Similarity: {mean_cosine}, Standard Deviation: {std_cosine}")
 
 
-def main(space, task, gpath, rpath):
+def captioning_handler(gpath, cpath):
+    generated_dataset = Loader.load_captions(gpath, cpath, batch_size=1)
+    mean_captioning, std_captioning = calculate_captioning_similarity(generated_dataset)
+    print(
+        f"Mean Captioning Similarity: {mean_captioning}, Standard Deviation: {std_captioning}"
+    )
+
+
+def main(space, task, gpath, rpath, cpath):
     if space == "quality":
         if task == "inception":
             inception_handler(gpath)
@@ -63,6 +72,8 @@ def main(space, task, gpath, rpath):
     elif space == "alignment":
         if task == "clip":
             clip_handler(gpath)
+        if task == "captioning":
+            captioning_handler(gpath, cpath)
 
 
 if __name__ == "__main__":
@@ -79,8 +90,12 @@ if __name__ == "__main__":
         "-gp", "--gpath", type=str, required=True, help="Generated Data Path"
     )
     parser.add_argument(
+        "-cp", "--cpath", type=str, required=False, help="Caption Data Path"
+    )
+    parser.add_argument(
         "-rp", "--rpath", type=str, required=False, help="Real Data Path"
     )
 
     args = parser.parse_args()
-    main(args.space, args.task, args.gpath, args.rpath)
+    print(args)
+    main(**vars(args))
