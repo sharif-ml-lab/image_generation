@@ -8,4 +8,4 @@ scipy
 torchmetrics
 torchvision
 opencv-python
-datasets
+sentence-transformers
