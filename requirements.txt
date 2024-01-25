@@ -9,3 +9,4 @@ torchmetrics
 torchvision
 opencv-python
 sentence-transformers
+transformers
