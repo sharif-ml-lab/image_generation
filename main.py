@@ -87,7 +87,7 @@ def captioning_handler(gpath, cpath):
     )
 
 
-def main(space, task, gpath, rpath, model):
+def main(space, task, gpath, rpath, model, cpath):
     if space == "quality":
         if task == "inception":
             inception_handler(gpath)
@@ -127,8 +127,12 @@ if __name__ == "__main__":
         "-gp", "--gpath", type=str, required=True, help="Generated Data Path"
     )
     parser.add_argument(
+        "-cp", "--cpath", type=str, required=False, help="Caption Data Path"
+    )
+    parser.add_argument(
         "-rp", "--rpath", type=str, required=False, help="Real Data Path"
     )
     parser.add_argument("-m", "--model", type=str, required=False, help="Model Name")
     args = parser.parse_args()
-    main(args.space, args.task, args.gpath, args.rpath, args.model)
+    print(args)
+    main(**vars(args))
