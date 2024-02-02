@@ -1,0 +1,1 @@
+from generators.sdm.trigger import generate_images_with_prompt
