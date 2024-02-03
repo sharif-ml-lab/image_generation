@@ -18,7 +18,12 @@ def calculate_learned_perceptual_similarity(loader_fake):
 
     for i, fake1 in tqdm(enumerate(loader_fake), total=size, desc="Total LPIPS"):
         if np.random.random() > 0.7:
-            for j, fake2 in tqdm(enumerate(loader_fake), total=size, desc="Current Calculation", leave=False):
+            for j, fake2 in tqdm(
+                enumerate(loader_fake),
+                total=size,
+                desc="Current Calculation",
+                leave=False,
+            ):
                 if i < j and np.random.random() > 0.6:
                     fake1 = fake1.to(DEVICE)
                     fake2 = fake2.to(DEVICE)

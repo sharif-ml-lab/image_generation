@@ -23,9 +23,7 @@ def inception_handler(gpath):
 def frechet_handler(gpath, rpath):
     generated_dataset = Loader.load(gpath, batch_size=1)
     real_dataset = Loader.load(rpath, batch_size=1)
-    fid_score = calculate_frechet_inception_distance(
-        real_dataset, generated_dataset
-    )
+    fid_score = calculate_frechet_inception_distance(real_dataset, generated_dataset)
     print(f"Frechet Inception Distance: {fid_score}")
 
 
