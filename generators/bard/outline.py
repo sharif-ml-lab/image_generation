@@ -26,7 +26,7 @@ browser.find_element(By.ID, "identifierId").send_keys(Keys.RETURN)
 sleep(5)
 browser.execute_script("""
     var passwordField = document.querySelector("input[type='password']");
-    passwordField.value = 'Dampasoorati80@';
+    passwordField.value = 'PASSWORD';
     passwordField.dispatchEvent(new Event('change'));
     var enterKeyEvent = new KeyboardEvent("keydown", {
         bubbles: true, cancelable: true, keyCode: 13
