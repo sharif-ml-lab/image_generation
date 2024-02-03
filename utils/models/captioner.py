@@ -7,6 +7,7 @@ from transformers import (
     BlipForConditionalGeneration,
     VisionEncoderDecoderModel,
 )
+from transformers import logging as transformers_logging
 
 
 class Captioner(nn.Module):
@@ -26,6 +27,7 @@ class BLIPCaptioner(Captioner):
         half_precision=False,
         model_name="Salesforce/blip-image-captioning-base",
     ):
+        transformers_logging.set_verbosity_error()
         super(BLIPCaptioner, self).__init__(device, half_precision)
         self.processor = BlipProcessor.from_pretrained(model_name)
         self.model = BlipForConditionalGeneration.from_pretrained(

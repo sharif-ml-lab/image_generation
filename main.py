@@ -1,41 +1,54 @@
 import argparse
-import handlers.generators as generator_handlers
-import handlers.metrics as metric_handlers
+import logging 
+import os
 
 
 def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
+    all_task = task == "report"
+    output = []
+
     if space == "quality":
-        if task == "inception":
-            metric_handlers.inception_handler(gpath)
-        elif task == "frechet":
-            metric_handlers.frechet_handler(gpath, rpath)
-        elif task == "realism":
-            metric_handlers.realism_handler(gpath)
+        if all_task or task == "inception":
+            output.append(metric_handlers.inception_handler(gpath))
+        if all_task or task == "frechet":
+            output.append(metric_handlers.frechet_handler(gpath, rpath))
+        if all_task or task == "realism":
+            output.append(metric_handlers.realism_handler(gpath))
 
     elif space == "diversity":
-        if task == "perceptual":
-            metric_handlers.perceptual_handler(gpath)
-        if task == "simemb":
-            metric_handlers.simemb_handler(gpath)
-        if task == "ssim":
-            metric_handlers.ssim_handler(gpath)
-        if task == "psnr":
-            metric_handlers.psnr_handler(gpath)
+        if all_task or task == "perceptual":
+            output.append(metric_handlers.perceptual_handler(gpath))
+        if all_task or task == "simemb":
+            output.append(metric_handlers.simemb_handler(gpath))
+        if all_task or task == "ssim":
+            output.append(metric_handlers.ssim_handler(gpath))
+        if all_task or task == "psnr":
+            output.append(metric_handlers.psnr_handler(gpath))
 
     elif space == "alignment":
-        if task == "clip":
-            metric_handlers.clip_handler(gpath)
-        elif task == "vqa":
-            metric_handlers.vqa_handler(gpath, model)
-        elif task == "captioning":
-            metric_handlers.captioning_handler(gpath, cpath)
+        if all_task or task == "clip":
+            output.append(metric_handlers.clip_handler(gpath))
+        if all_task or task == "vqa":
+            output.append(metric_handlers.vqa_handler(gpath, model))
+        if all_task or task == "captioning":
+            output.append(metric_handlers.captioning_handler(gpath, cpath))
 
     elif space == "genai":
         if task == "sdm":
             generator_handlers.sdm_handler(opath, model, prompt, count)
 
+    print("\n".join(output))
+
 
 if __name__ == "__main__":
+    
+    logging.getLogger('torch').setLevel(logging.CRITICAL)
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
+    import handlers.generators as generator_handlers
+    import handlers.metrics as metric_handlers
+
     parser = argparse.ArgumentParser(
         description="Sharif ML-Lab Data Generation ToolKit"
     )
@@ -63,5 +76,4 @@ if __name__ == "__main__":
         "-n", "--count", type=int, required=False, help="Number of Images To Generate"
     )
     args = parser.parse_args()
-    print(args)
     main(**vars(args))

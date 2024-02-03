@@ -2,6 +2,7 @@ import cv2
 import math
 import torch
 import numpy as np
+from tqdm import tqdm
 from skimage.feature import graycomatrix, graycoprops
 
 
@@ -88,7 +89,7 @@ def get_image_array(fake):
 
 def calculate_realism_score(loader_fake):
     scores = []
-    for fake_batch in loader_fake:
+    for fake_batch in tqdm(loader_fake, desc="Calculating Realism"):
         fake = get_image_array(fake_batch[0])
         scores.append(compute_realism_score(fake))
     scores_array = np.array(scores)
