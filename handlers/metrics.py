@@ -16,14 +16,15 @@ from metrics.diversity.ssim import calculate_structural_similarity
 
 def inception_handler(gpath):
     generated_dataset = Loader.load(gpath, batch_size=1)
-    mean_is, std_is = calculate_inception_score(generated_dataset, inception_model)
+    mean_is, std_is = calculate_inception_score(generated_dataset)
     print(f"Mean Inception Score: {mean_is}, Standard Deviation: {std_is}")
 
 
 def frechet_handler(gpath, rpath):
+    generated_dataset = Loader.load(gpath, batch_size=1)
     real_dataset = Loader.load(rpath, batch_size=1)
     fid_score = calculate_frechet_inception_distance(
-        real_dataset, generated_dataset, inception_model
+        real_dataset, generated_dataset
     )
     print(f"Frechet Inception Distance: {fid_score}")
 
@@ -35,7 +36,7 @@ def realism_handler(gpath):
 
 
 def perceptual_handler(gpath):
-    generated_dataset = Loader.load(gpath, batch_size=1)
+    generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
     mean_lpips, std_lpips = calculate_learned_perceptual_similarity(generated_dataset)
     print(f"Mean Perceptual Similarity: {mean_lpips}, Standard Deviation: {std_lpips}")
 

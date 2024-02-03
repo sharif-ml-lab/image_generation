@@ -27,8 +27,8 @@ pipe_xl_vae_refiner = DiffusionPipeline.from_pretrained(
 
 
 def generate(prompt):
-    n_steps = 70
-    high_noise_frac = 0.7
+    n_steps = 40
+    high_noise_frac = 0.73
     image = pipe_xl_vae(
         prompt=prompt,
         num_inference_steps=n_steps,

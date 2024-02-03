@@ -8,7 +8,7 @@ from torchvision.models import Inception_V3_Weights
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-def calculate_inception_score(loader, inception_model, splits=10):
+def calculate_inception_score(loader, splits=10):
     weights = Inception_V3_Weights.IMAGENET1K_V1
     inception_model = models.inception_v3(weights=weights).to(DEVICE)
     inception_model.eval()

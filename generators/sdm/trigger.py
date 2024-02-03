@@ -1,20 +1,21 @@
-import torch
 import os
-from .models.xlarge_turbo import generate as gen_xl_turbo
-from .models.xlarge_vae import generate as gen_xl_vae
+import time
+import torch
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-def save_image(image, file_name, model_name, base_path):
-    relpath = f'{base_path}/{model_name}/'
+def generate_image_with_sdm(output_path, model, prompt, count):
+    if model == "turbo":
+        from .models.xlarge_turbo import generate as generator
+    elif model == "vae":
+        from .models.xlarge_vae import generate as generator
+
+    relpath = f"{output_path}/{model}/{int(time.time())}/"
     os.makedirs(relpath, exist_ok=True)
-    image.save(relpath + file_name)
 
-
-def generate_images_with_prompt(prompt, base_path, n=15):
-    for i in range(1, n+1):
-        save_image(gen_xl_turbo(prompt), f'{i}.jpg', 'xl_turbo', base_path)
-        save_image(gen_xl_vae(prompt), f'{i}.jpg', 'xl_vae', base_path)
-        print(i, 'Images Has Been Generated')
+    for i in range(1, count + 1):
+        image = generator(prompt)
+        image.save(relpath + f"{i}.jpg")
+        print(i, "Images Has Been Generated")

@@ -3,7 +3,7 @@ import handlers.generators as generator_handlers
 import handlers.metrics as metric_handlers
 
 
-def main(space, task, gpath, rpath, model, cpath):
+def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
     if space == "quality":
         if task == "inception":
             metric_handlers.inception_handler(gpath)
@@ -11,7 +11,7 @@ def main(space, task, gpath, rpath, model, cpath):
             metric_handlers.frechet_handler(gpath, rpath)
         elif task == "realism":
             metric_handlers.realism_handler(gpath)
-            
+
     elif space == "diversity":
         if task == "perceptual":
             metric_handlers.perceptual_handler(gpath)
@@ -30,6 +30,10 @@ def main(space, task, gpath, rpath, model, cpath):
         elif task == "captioning":
             metric_handlers.captioning_handler(gpath, cpath)
 
+    elif space == "genai":
+        if task == "sdm":
+            generator_handlers.sdm_handler(opath, model, prompt, count)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -42,7 +46,7 @@ if __name__ == "__main__":
         "-t", "--task", type=str, required=True, help="Task Name (e.g. inception, knn)"
     )
     parser.add_argument(
-        "-gp", "--gpath", type=str, required=True, help="Generated Data Path"
+        "-gp", "--gpath", type=str, required=False, help="Generated Data Path"
     )
     parser.add_argument(
         "-cp", "--cpath", type=str, required=False, help="Caption Data Path"
@@ -50,7 +54,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "-rp", "--rpath", type=str, required=False, help="Real Data Path"
     )
+    parser.add_argument(
+        "-op", "--opath", type=str, required=False, help="Output Data Path"
+    )
     parser.add_argument("-m", "--model", type=str, required=False, help="Model Name")
+    parser.add_argument("-p", "--prompt", type=str, required=False, help="Prompt Text")
+    parser.add_argument(
+        "-n", "--count", type=int, required=False, help="Number of Images To Generate"
+    )
     args = parser.parse_args()
     print(args)
     main(**vars(args))
