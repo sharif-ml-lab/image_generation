@@ -32,4 +32,3 @@ class SwinV2Tiny(Embedding):
         outputs = self.model(**inputs)
         embedding = outputs.last_hidden_state
         return embedding.reshape(1, -1)
-        

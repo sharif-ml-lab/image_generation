@@ -1,5 +1,5 @@
 import argparse
-import logging 
+import logging
 import os
 
 
@@ -41,10 +41,9 @@ def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
 
 
 if __name__ == "__main__":
-    
-    logging.getLogger('torch').setLevel(logging.CRITICAL)
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+    logging.getLogger("torch").setLevel(logging.CRITICAL)
+    os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+    os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
     import handlers.generators as generator_handlers
     import handlers.metrics as metric_handlers

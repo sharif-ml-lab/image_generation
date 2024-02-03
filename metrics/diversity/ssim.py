@@ -17,9 +17,9 @@ def calculate_structural_similarity(loader_fake):
                 fake1 = fake_batch_1[0].cpu().numpy()
                 fake2 = fake_batch_2[0].cpu().numpy()
                 similarity[i, j] = calculate_ssim(fake1, fake2)
-                progress_bar.update(1) 
-    
-    progress_bar.close() 
+                progress_bar.update(1)
+
+    progress_bar.close()
 
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]

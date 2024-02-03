@@ -19,16 +19,15 @@ def calculate_learned_perceptual_similarity(loader_fake):
     total_pairs = size * (size - 1) // 2
     progress_bar = tqdm(total=total_pairs, desc="Calculating LPIPS", unit="pairs")
 
-
     for i, fake1 in enumerate(loader_fake):
         for j, fake2 in enumerate(loader_fake):
             if i < j:
                 fake1 = fake1.to(DEVICE)
                 fake2 = fake2.to(DEVICE)
                 similarity[i, j] = float(lpips(fake1, fake2))
-                progress_bar.update(1) 
-    
-    progress_bar.close() 
+                progress_bar.update(1)
+
+    progress_bar.close()
 
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]

@@ -10,7 +10,6 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def calculate_simemb_similarity(loader_fake):
-
     embedding_model = SwinV2Tiny(DEVICE)
 
     embedding_list = []
@@ -28,14 +27,13 @@ def compute_pairwise_similarity(embedding_list):
     total_pairs = size * (size - 1) // 2
     progress_bar = tqdm(total=total_pairs, desc="Calculating SimEmb", unit="pairs")
 
-
     for i, emb1 in enumerate(embedding_list):
         for j, emb2 in enumerate(embedding_list):
             if i < j:
                 similarity_matrix[i, j] = 1 - F.cosine_similarity(emb1, emb2)
-                progress_bar.update(1) 
-    
-    progress_bar.close() 
+                progress_bar.update(1)
+
+    progress_bar.close()
 
     flat = similarity_matrix.ravel()
     flat_non_zero = flat[flat != 0]

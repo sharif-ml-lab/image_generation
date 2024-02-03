@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from sentence_transformers import SentenceTransformer
-from transformers import logging as transformers_logging 
+from transformers import logging as transformers_logging
 
 
 transformers_logging.disable_progress_bar()

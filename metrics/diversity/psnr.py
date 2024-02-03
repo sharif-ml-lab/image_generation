@@ -19,10 +19,10 @@ def calculate_peak_signal_to_noise(loader_fake):
                 similarity[i, j] = calculate_psnr(
                     fake1.cpu().numpy(), fake2.cpu().numpy()
                 )
-                progress_bar.update(1) 
+                progress_bar.update(1)
 
     progress_bar.close()
-    
+
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]
 
