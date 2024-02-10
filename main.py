@@ -27,9 +27,9 @@ def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
 
     elif space == "alignment":
         if all_task or task == "clip":
-            output.append(metric_handlers.clip_handler(gpath))
+            output.append(metric_handlers.clip_handler(gpath, cpath))
         if all_task or task == "vqa":
-            output.append(metric_handlers.vqa_handler(gpath, model))
+            output.append(metric_handlers.vqa_handler(gpath, cpath, model))
         if all_task or task == "captioning":
             output.append(metric_handlers.captioning_handler(gpath, cpath))
 

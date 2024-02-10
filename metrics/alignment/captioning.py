@@ -8,7 +8,7 @@ from tqdm import tqdm
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-def calculate_captioning_similarity(loader, base_caption="a man is "):
+def calculate_captioning_similarity(loader, base_caption="an image of "):
     image_captioner = BLIPCaptioner(DEVICE, half_precision=True)
     sentence_encoder = MiniLMEncoder(DEVICE)
     similarities = []

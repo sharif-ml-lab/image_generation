@@ -1,9 +1,12 @@
 import cv2
 import math
 import torch
+import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from skimage.feature import graycomatrix, graycoprops
+from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import StandardScaler
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -67,16 +70,7 @@ def compute_realism_score(image):
         glcm_metrics["energy"],
     )
 
-    theta = (2 * math.pi) / 5
-    total_area = 0
-    metrics = [m1, m2, m3, m4, m5]
-    for i in range(5):
-        ma = metrics[i]
-        mb = metrics[(i + 1) % 5]
-        area_triangle = (ma * mb * math.sin(theta)) / 2
-        total_area += area_triangle
-
-    return total_area
+    return [m1, m2, m3, m4, m5]
 
 
 def get_image_array(fake):
@@ -87,10 +81,22 @@ def get_image_array(fake):
     return fake_np
 
 
+def get_gmm_neg_likelihoods(measures):
+    df_coco = pd.read_csv('utils/data/realism/realism_coco.csv')
+    scaler = StandardScaler()
+    scaled_data = scaler.fit_transform(df_coco)
+    gmm = GaussianMixture(n_components=5, random_state=0)
+    gmm.fit(scaled_data)
+    scaled_measures = scaler.transform(measures)
+    likelihoods = -gmm.score_samples(scaled_measures)
+    return likelihoods
+
+
 def calculate_realism_score(loader_fake):
-    scores = []
+    measures = []
     for fake_batch in tqdm(loader_fake, desc="Calculating Realism"):
         fake = get_image_array(fake_batch[0])
-        scores.append(compute_realism_score(fake))
-    scores_array = np.array(scores)
-    return scores_array.mean(), scores_array.std()
+        measures.append(compute_realism_score(fake))
+    measures = np.array(measures)
+    likelihoods = get_gmm_neg_likelihoods(measures)
+    return likelihoods.mean(), likelihoods.std()

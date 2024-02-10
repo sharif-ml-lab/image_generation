@@ -30,7 +30,7 @@ def frechet_handler(gpath, rpath):
 def realism_handler(gpath):
     generated_dataset = Loader.load(gpath, batch_size=1, tan_scale=True)
     mean_real, std_real = calculate_realism_score(generated_dataset)
-    return f"Mean Realism: {mean_real}, SD: {std_real}"
+    return f"Mean Neg-Likelihood Realism: {mean_real}, SD: {std_real}"
 
 
 def perceptual_handler(gpath):
@@ -57,8 +57,8 @@ def psnr_handler(gpath):
     return f"Mean PSNR: {mean_psnr}, SD: {std_psnr}"
 
 
-def clip_handler(gpath):
-    generated_dataset = Loader.load(gpath, batch_size=1)
+def clip_handler(gpath, cpath):
+    generated_dataset = Loader.load_captions(gpath, cpath, batch_size=1)
     mean_cosine, std_cosine = calculate_clip_similarity(generated_dataset)
     return f"Mean CLIP: {mean_cosine}, SD: {std_cosine}"
 
