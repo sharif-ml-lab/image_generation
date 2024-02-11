@@ -21,7 +21,7 @@ def get_qualification(temp_img_path, caption_path):
 
 def generate_image_with_sdm(output_path, model_name, prompt, count):
     """
-    Generaing Images By Given SDM Model Name 
+    Generaing Images By Given SDM Model Name
     """
     if model_name == "turbo":
         from utils.models.sdm import XlargeTurbuSDM as model_obj
@@ -31,27 +31,25 @@ def generate_image_with_sdm(output_path, model_name, prompt, count):
     relpath = f"{output_path}/{model_name}/{int(time.time())}/"
     os.makedirs(relpath, exist_ok=True)
 
-    temp_path = f'/tmp/sdm_{model_name}/'
-    temp_caption_path = f'/tmp/caption/'
-    temp_image_path = temp_path + 'temp.jpg'
-    temp_caption_csv = f'/tmp/caption/caption.csv'
-    os.makedirs(temp_path, exist_ok=True) 
-    os.makedirs(temp_caption_path, exist_ok=True) 
+    temp_path = f"/tmp/sdm_{model_name}/"
+    temp_caption_path = f"/tmp/caption/"
+    temp_image_path = temp_path + "temp.jpg"
+    temp_caption_csv = f"/tmp/caption/caption.csv"
+    os.makedirs(temp_path, exist_ok=True)
+    os.makedirs(temp_caption_path, exist_ok=True)
 
     sdm_model = model_obj(DEVICE)
     qualifed_generated = 0
     while qualifed_generated < count:
         image = sdm_model(prompt)
         image.save(temp_image_path)
-        pd.DataFrame({
-            'image_name': ['temp.jpg'],
-            'caption': prompt
-        }).to_csv(temp_caption_csv, index=False, sep='|')
+        pd.DataFrame({"image_name": ["temp.jpg"], "caption": prompt}).to_csv(
+            temp_caption_csv, index=False, sep="|"
+        )
         alignment, quality = get_qualification(temp_path, temp_caption_csv)
         print(alignment, quality)
         if alignment > 4 and quality > 0.65:
             image_path = relpath + f"{qualifed_generated}.jpg"
             image.save(image_path)
             qualifed_generated += 1
-            print(qualifed_generated, 'Image Generated')
-            
+            print(qualifed_generated, "Image Generated")

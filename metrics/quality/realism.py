@@ -101,7 +101,9 @@ def get_gmm_neg_likelihoods(measures):
 
 def calculate_realism_score(loader_fake, has_tqdm=True):
     measures = []
-    iterations = tqdm(loader_fake, desc="Calculating Realism") if has_tqdm else loader_fake
+    iterations = (
+        tqdm(loader_fake, desc="Calculating Realism") if has_tqdm else loader_fake
+    )
     for fake_batch in iterations:
         fake = get_image_array(fake_batch[0])
         measures.append(compute_realism_score(fake))
