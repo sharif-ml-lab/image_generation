@@ -46,9 +46,9 @@ def generate_image_with_sdm(output_path, model_name, prompt, count):
         pd.DataFrame({"image_name": ["temp.jpg"], "caption": prompt}).to_csv(
             temp_caption_csv, index=False, sep="|"
         )
-        alignment, quality = get_qualification(temp_path, temp_caption_csv)
+        quality, alignment = get_qualification(temp_path, temp_caption_csv)
         print(alignment, quality)
-        if alignment > 4 and quality > 0.65:
+        if alignment > 0.8 and quality > 2.7:
             image_path = relpath + f"{qualifed_generated}.jpg"
             image.save(image_path)
             qualifed_generated += 1
