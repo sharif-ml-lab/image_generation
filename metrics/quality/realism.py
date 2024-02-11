@@ -4,6 +4,7 @@ import torch
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
+from functools import lru_cache, partialmethod
 from skimage.feature import graycomatrix, graycoprops
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
@@ -81,20 +82,27 @@ def get_image_array(fake):
     return fake_np
 
 
-def get_gmm_neg_likelihoods(measures):
-    df_coco = pd.read_csv("utils/data/realism/realism_coco.csv")
+@lru_cache(None)
+def build_gmm():
+    matrix_coco = np.array(pd.read_csv("utils/data/realism/realism_coco.csv"))
     scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(df_coco)
+    scaled_data = scaler.fit_transform(matrix_coco)
     gmm = GaussianMixture(n_components=5, random_state=0)
     gmm.fit(scaled_data)
+    return scaler, gmm
+
+
+def get_gmm_neg_likelihoods(measures):
+    scaler, gmm = build_gmm()
     scaled_measures = scaler.transform(measures)
     likelihoods = -gmm.score_samples(scaled_measures)
     return likelihoods
 
 
-def calculate_realism_score(loader_fake):
+def calculate_realism_score(loader_fake, has_tqdm=True):
     measures = []
-    for fake_batch in tqdm(loader_fake, desc="Calculating Realism"):
+    iterations = tqdm(loader_fake, desc="Calculating Realism") if has_tqdm else loader_fake
+    for fake_batch in iterations:
         fake = get_image_array(fake_batch[0])
         measures.append(compute_realism_score(fake))
     measures = np.array(measures)

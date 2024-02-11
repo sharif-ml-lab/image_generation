@@ -35,7 +35,7 @@ class XlargeVAESDM(SDM):
     def __init__(
         self,
         device,
-        vae_name="stabilityai/stable-diffusion-xl-base-1.0",
+        vae_name="stabilityai/sd-vae-ft-mse",
         model_name="stabilityai/stable-diffusion-xl-base-1.0",
         refiner_name="stabilityai/stable-diffusion-xl-refiner-1.0",
     ):
