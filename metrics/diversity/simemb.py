@@ -6,7 +6,7 @@ from utils.models.embedding import SwinV2Tiny
 from tqdm import tqdm
 
 
-DEVICE = "cpu" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def calculate_simemb_similarity(loader):
@@ -24,7 +24,7 @@ def compute_pairwise_similarity(embeddings):
     size = len(embeddings)
     similarity_matrix = np.zeros(size)
 
-    for i in tqdm(range(1, size), desc="Calculating SimEmb"):        
+    for i in tqdm(range(1, size), desc="Calculating SimEmb"):
         similarity_matrix[i] = 1 - F.cosine_similarity(embeddings[i], embeddings[i - 1])
 
     flat = similarity_matrix.ravel()

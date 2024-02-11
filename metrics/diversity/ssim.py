@@ -10,9 +10,7 @@ def calculate_structural_similarity(loader):
     for i in tqdm(range(1, size), desc="Calculating SSIM"):
         image1 = loader.dataset[i].unsqueeze(0)
         image2 = loader.dataset[i - 1].unsqueeze(0)
-        similarity[i] = calculate_ssim(
-            image1.cpu().numpy()[0], image2.cpu().numpy()[0]
-        )
+        similarity[i] = calculate_ssim(image1.cpu().numpy()[0], image2.cpu().numpy()[0])
 
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]

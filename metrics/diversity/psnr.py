@@ -10,9 +10,7 @@ def calculate_peak_signal_to_noise(loader):
     for i in tqdm(range(1, size), desc="Calculating PSNR"):
         image1 = loader.dataset[i].unsqueeze(0)
         image2 = loader.dataset[i - 1].unsqueeze(0)
-        similarity[i] = calculate_psnr(
-            image1.cpu().numpy(), image2.cpu().numpy()
-        )
+        similarity[i] = calculate_psnr(image1.cpu().numpy(), image2.cpu().numpy())
 
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]
