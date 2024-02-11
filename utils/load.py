@@ -1,5 +1,5 @@
 import os
-import pandas as pd 
+import pandas as pd
 import numpy as np
 import torch
 from torchvision import models, transforms
@@ -32,7 +32,7 @@ class ImageFolderDataset(Dataset):
 class ImageCaptionDataset(ImageFolderDataset):
     def __init__(self, folder_path, captions_file, transform=None):
         super(ImageCaptionDataset, self).__init__(folder_path, transform)
-        self.captions = pd.read_csv(captions_file, sep='|')
+        self.captions = pd.read_csv(captions_file, sep="|")
         self.transform = transform
 
     def __getitem__(self, idx):
@@ -40,9 +40,9 @@ class ImageCaptionDataset(ImageFolderDataset):
         image = np.array(image)
         if self.transform:
             image = self.transform(image).to(DEVICE)
-        image_name = self.file_list[idx].split('/')[-1]
-        caption = self.captions[self.captions['image_name'] == image_name]
-        caption = caption['caption'].values[0]
+        image_name = self.file_list[idx].split("/")[-1]
+        caption = self.captions[self.captions["image_name"] == image_name]
+        caption = caption["caption"].values[0]
         return image, caption
 
 

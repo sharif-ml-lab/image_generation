@@ -3,25 +3,16 @@ from skimage.metrics import structural_similarity as ssim
 from tqdm import tqdm
 
 
-def calculate_peak_signal_to_noise(loader_fake):
-    size = len(loader_fake)
-    similarity = np.zeros((size, size))
+def calculate_peak_signal_to_noise(loader):
+    size = len(loader)
+    similarity = np.zeros(size)
 
-    total_pairs = size * (size - 1) // 2
-    progress_bar = tqdm(total=total_pairs, desc="Calculating PSNR", unit="pairs")
-
-    pairs = []
-    for i, fake_batch_1 in enumerate(loader_fake):
-        for j, fake_batch_2 in enumerate(loader_fake):
-            if i < j:
-                fake1 = fake_batch_1[0]
-                fake2 = fake_batch_2[0]
-                similarity[i, j] = calculate_psnr(
-                    fake1.cpu().numpy(), fake2.cpu().numpy()
-                )
-                progress_bar.update(1)
-
-    progress_bar.close()
+    for i in tqdm(range(1, size), desc="Calculating PSNR"):
+        image1 = loader.dataset[i].unsqueeze(0)
+        image2 = loader.dataset[i - 1].unsqueeze(0)
+        similarity[i] = calculate_psnr(
+            image1.cpu().numpy(), image2.cpu().numpy()
+        )
 
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]

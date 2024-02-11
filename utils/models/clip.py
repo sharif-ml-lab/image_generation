@@ -36,4 +36,4 @@ class ViTLargeClip(Clip):
             logits_per_image = outputs.logits_per_image
             return float(logits_per_image[0])
         except:
-            return None # Clip Prompt Max Token Limit
+            return None  # Clip Prompt Max Token Limit

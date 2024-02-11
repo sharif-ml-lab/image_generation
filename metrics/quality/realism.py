@@ -82,7 +82,7 @@ def get_image_array(fake):
 
 
 def get_gmm_neg_likelihoods(measures):
-    df_coco = pd.read_csv('utils/data/realism/realism_coco.csv')
+    df_coco = pd.read_csv("utils/data/realism/realism_coco.csv")
     scaler = StandardScaler()
     scaled_data = scaler.fit_transform(df_coco)
     gmm = GaussianMixture(n_components=5, random_state=0)

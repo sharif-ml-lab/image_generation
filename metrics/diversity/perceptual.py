@@ -10,26 +10,18 @@ from tqdm import tqdm
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-def calculate_learned_perceptual_similarity(loader_fake):
+def calculate_learned_perceptual_similarity(loader):
     lpips = LearnedPerceptualImagePatchSimilarity(net_type="squeeze").to(DEVICE)
 
-    size = len(loader_fake)
-    similarity = np.zeros((size, size))
+    size = len(loader)
+    similarity = np.zeros(size)
 
-    total_pairs = size * (size - 1) // 2 * 0.05 // 1
-    progress_bar = tqdm(total=total_pairs, desc="Calculating LPIPS", unit="pairs")
-
-    for i, fake1 in enumerate(loader_fake):
-        if np.random.random() > 0.95:
-            for j, fake2 in enumerate(loader_fake):
-                if i < j:
-                    if np.random.random() > 0.95:
-                        fake1 = fake1.to(DEVICE)
-                        fake2 = fake2.to(DEVICE)
-                        similarity[i, j] = float(lpips(fake1, fake2))
-                    progress_bar.update(1)
-
-    progress_bar.close()
+    for i in tqdm(range(1, size), desc="Calculating LPIPS"):
+        image1 = loader.dataset[i].unsqueeze(0)
+        image2 = loader.dataset[i - 1].unsqueeze(0)
+        image1 = image1.to(DEVICE)
+        image2 = image2.to(DEVICE)
+        similarity[i] = float(lpips(image1, image2))
 
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]

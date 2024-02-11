@@ -3,23 +3,16 @@ from skimage.metrics import structural_similarity as ssim
 from tqdm import tqdm
 
 
-def calculate_structural_similarity(loader_fake):
-    size = len(loader_fake)
-    similarity = np.zeros((size, size))
+def calculate_structural_similarity(loader):
+    size = len(loader)
+    similarity = np.zeros(size)
 
-    total_pairs = size * (size - 1) // 2
-    progress_bar = tqdm(total=total_pairs, desc="Calculating SSIM", unit="pairs")
-
-    pairs = []
-    for i, fake_batch_1 in enumerate(loader_fake):
-        for j, fake_batch_2 in enumerate(loader_fake):
-            if i < j:
-                fake1 = fake_batch_1[0].cpu().numpy()
-                fake2 = fake_batch_2[0].cpu().numpy()
-                similarity[i, j] = calculate_ssim(fake1, fake2)
-                progress_bar.update(1)
-
-    progress_bar.close()
+    for i in tqdm(range(1, size), desc="Calculating SSIM"):
+        image1 = loader.dataset[i].unsqueeze(0)
+        image2 = loader.dataset[i - 1].unsqueeze(0)
+        similarity[i] = calculate_ssim(
+            image1.cpu().numpy()[0], image2.cpu().numpy()[0]
+        )
 
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]
@@ -32,7 +25,7 @@ def calculate_ssim(img1, img2):
         img1,
         img2,
         multichannel=True,
-        win_size=11,
+        win_size=7,
         channel_axis=0,
         data_range=img1.max() - img1.min(),
     )
