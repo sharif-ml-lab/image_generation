@@ -5,6 +5,7 @@ pillow
 numpy 
 pandas
 scipy 
+requests
 torchmetrics
 torchvision
 opencv-python

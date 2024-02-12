@@ -1,7 +1,19 @@
 # Image Generation
 
+## Installation
 
-### Metric CLI
+### Packages
+- `pip install -r requirements.txt`
+
+### Juggernaut 
+```bash
+docker run -d --gpus=all \
+    -e NVIDIA_DRIVER_CAPABILITIES=compute,utility \
+    -e NVIDIA_VISIBLE_DEVICES=all \
+    -p 8886:8888 konieshadow/fooocus-api
+```
+
+## Metric CLI
 `./main.py --space <metric_type> --task <metric_name> --gpath <generated_path> [--rpath <real_path>]`
 
 
