@@ -4,11 +4,9 @@ import torch
 import pandas as pd
 from tqdm import tqdm
 from utils.load import Loader
+from generators.juggernaut.api import generate
 from metrics.alignment.captioning import calculate_captioning_similarity
 from metrics.quality.realism import calculate_realism_score
-
-
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def get_qualification(temp_img_path, caption_path):
@@ -19,36 +17,30 @@ def get_qualification(temp_img_path, caption_path):
     return realism, captioning
 
 
-def generate_image_with_sdm(output_path, model_name, prompt, count):
+def generate_image_with_juggernaut(output_path, prompt, count):
     """
-    Generaing Images By Given SDM Model Name
+    Generaing Images By Juggernaut SDM
     """
-    if model_name == "turbo":
-        from utils.models.sdm import XlargeTurbuSDM as model_obj
-    if model_name == "vae":
-        from utils.models.sdm import XlargeVAESDM as model_obj
-
-    relpath = f"{output_path}/{model_name}/{int(time.time())}/"
+    relpath = f"{output_path}/juggernaut/{int(time.time())}/"
     os.makedirs(relpath, exist_ok=True)
 
-    temp_path = f"/tmp/sdm_{model_name}/"
-    temp_caption_path = f"/tmp/sdm_{model_name}_caption/"
+    temp_path = f"/tmp/juggernaut/"
+    temp_caption_path = f"/tmp/juggernaut_caption/"
     temp_image_path = temp_path + "temp.jpg"
     temp_caption_csv = temp_caption_path + "caption.csv"
     os.makedirs(temp_path, exist_ok=True)
     os.makedirs(temp_caption_path, exist_ok=True)
 
-    sdm_model = model_obj(DEVICE)
     qualifed_generated = 0
     while qualifed_generated < count:
-        image = sdm_model(prompt)
+        image = generate(prompt)
         image.save(temp_image_path)
         pd.DataFrame({"image_name": ["temp.jpg"], "caption": prompt}).to_csv(
             temp_caption_csv, index=False, sep="|"
         )
         quality, alignment = get_qualification(temp_path, temp_caption_csv)
-        print(alignment, quality)
-        if alignment > 0.8 and quality > 2.8:
+        print(alignment)
+        if alignment > 0.73:
             image_path = relpath + f"{qualifed_generated}.jpg"
             image.save(image_path)
             qualifed_generated += 1
