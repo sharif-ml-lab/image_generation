@@ -39,7 +39,6 @@ def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
         if task == "juggernaut":
             generator_handlers.juggernaut_handler(opath, prompt, count)
 
-
     print("\n".join(output))
 
 
