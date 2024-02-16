@@ -1,0 +1,44 @@
+version: '3'
+services:
+  fooocus:
+    container_name: fooocus
+    image: konieshadow/fooocus-api
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    ports:
+      - 8886:8888
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  
+  ollama:
+    container_name: ollama
+    image: ollama/ollama
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - 11434:1143
+    command: ollama run llama2:70b
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  
+  metrics:
+    container_name: metrics
+    build: .
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
