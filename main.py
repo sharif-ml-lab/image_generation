@@ -38,6 +38,8 @@ def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
             generator_handlers.sdm_handler(opath, model, prompt, count)
         if task == "juggernaut":
             generator_handlers.juggernaut_handler(opath, prompt, count)
+        if task == "prompt":
+            generator_handlers.prompts_handler(opath, prompt, count)
 
     print("\n".join(output))
 

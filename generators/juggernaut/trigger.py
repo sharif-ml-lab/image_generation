@@ -40,7 +40,7 @@ def generate_image_with_juggernaut(output_path, prompt, count):
         )
         quality, alignment = get_qualification(temp_path, temp_caption_csv)
         print(alignment)
-        if alignment > 0.73:
+        if alignment > 0.5:
             image_path = relpath + f"{qualifed_generated}.jpg"
             image.save(image_path)
             qualifed_generated += 1
