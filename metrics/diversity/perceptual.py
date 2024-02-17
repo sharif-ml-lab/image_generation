@@ -10,7 +10,7 @@ from tqdm import tqdm
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-def calculate_learned_perceptual_similarity(loader):
+def calculate_learned_perceptual_diversity(loader):
     lpips = LearnedPerceptualImagePatchSimilarity(net_type="squeeze").to(DEVICE)
 
     size = len(loader)

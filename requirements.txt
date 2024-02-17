@@ -6,6 +6,8 @@ numpy
 pandas
 scipy 
 requests
+bert-score
+nltk
 torchmetrics
 torchvision
 opencv-python

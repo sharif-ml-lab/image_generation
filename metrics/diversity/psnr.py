@@ -3,7 +3,7 @@ from skimage.metrics import structural_similarity as ssim
 from tqdm import tqdm
 
 
-def calculate_peak_signal_to_noise(loader):
+def calculate_psnr_diversity(loader):
     size = len(loader)
     similarity = np.zeros(size)
 

@@ -3,7 +3,7 @@ from skimage.metrics import structural_similarity as ssim
 from tqdm import tqdm
 
 
-def calculate_structural_similarity(loader):
+def calculate_structural_diversity(loader):
     size = len(loader)
     similarity = np.zeros(size)
 
