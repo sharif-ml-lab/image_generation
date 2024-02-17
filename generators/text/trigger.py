@@ -4,7 +4,7 @@ import torch
 import pandas as pd
 from tqdm import tqdm
 from utils.load import Loader
-from generators.prompt.api import generate
+from generators.text.api import generate
 
 
 def get_qualification(temp_img_path, caption_path):

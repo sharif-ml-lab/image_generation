@@ -3,11 +3,11 @@ import logging
 import os
 
 
-def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
+def main(space, method, data, task, gpath, rpath, cpath, opath, model, prompt, count):
     all_task = task == "report"
     output = []
 
-    if space == "metrics":
+    if space == "metric":
         if data == "image":
             if method == "quality":
                 if all_task or task == "inception":
@@ -36,7 +36,9 @@ def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
                     output.append(metric_handlers.captioning_handler(gpath, cpath))
 
         if data == "text":
-            pass
+            if method == "diversity":
+                if all_task or task == "simemb":
+                    output.append(metric_handlers.simemb_text_handler(gpath))
 
     elif space == "genai":
         if data == "image":
@@ -67,7 +69,7 @@ if __name__ == "__main__":
         "-s", "--space", type=str, required=True, help="Space Name (e.g. metric, genai)"
     )
     parser.add_argument(
-        "-m",
+        "-mt",
         "--method",
         type=str,
         required=True,

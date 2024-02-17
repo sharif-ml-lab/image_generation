@@ -46,6 +46,17 @@ class ImageCaptionDataset(ImageFolderDataset):
         return image, caption
 
 
+class TextDataset(Dataset):
+    def __init__(self, captions_file):
+        self.captions = pd.read_csv(captions_file, sep="|")
+
+    def __len__(self):
+        return len(self.captions)
+
+    def __getitem__(self, idx):
+        return self.captions.iloc[idx]["caption"]
+
+
 class Loader:
     @staticmethod
     def load(path, batch_size, tan_scale=False, shuffle=False):
@@ -76,3 +87,8 @@ class Loader:
             )
         generated_dataset = ImageCaptionDataset(path, captions, transform=None)
         return DataLoader(generated_dataset, batch_size=batch_size, shuffle=shuffle)
+
+    @staticmethod
+    def load_texts(captions, batch_size, shuffle=False):
+        text_dataset = TextDataset(captions)
+        return DataLoader(text_dataset, batch_size=batch_size, shuffle=shuffle)

@@ -45,6 +45,12 @@ def simemb_handler(gpath):
     return f"Mean SimEmb: {mean_cosine}, SD: {std_cosine}"
 
 
+def simemb_text_handler(gpath):
+    text_dataset = Loader.load_texts(gpath, batch_size=1)
+    mean_cosine, std_cosine = calculate_simemb_similarity(text_dataset, data='text')
+    return f"Mean SimEmb: {mean_cosine}, SD: {std_cosine}"
+
+
 def ssim_handler(gpath):
     generated_dataset = Loader.load(gpath, batch_size=1)
     mean_ssim, std_ssim = calculate_structural_similarity(generated_dataset)
