@@ -51,7 +51,9 @@ def sentence_handler(gpath):
 
 def sentence_text_handler(cpath, base_prompt):
     text_dataset = Loader.load_texts(cpath, batch_size=1)
-    mean_sentence, std_sentence = calculate_text_similarity(text_dataset, base_prompt=base_prompt)
+    mean_sentence, std_sentence = calculate_text_similarity(
+        text_dataset, base_prompt=base_prompt
+    )
     return f"4-NN Mean: {mean_sentence:.3}, SD: {std_sentence:.3}"
 
 
@@ -95,6 +97,7 @@ def classic_handler(cpath, base_prompt):
     text_dataset = Loader.load_texts(cpath, batch_size=1)
     bleu, meteor, bert = calculate_classic_nlp(text_dataset, base_prompt=base_prompt)
     return f"BLEU: {bleu}, METEOR: {meteor}, BERT: {bert}"
+
 
 def bert_diversity_handler(cpath):
     text_dataset = Loader.load_texts(cpath, batch_size=1)

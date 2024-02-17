@@ -16,7 +16,7 @@ from bert_score import score as bert_scorize
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-nltk.download('punkt', download_dir="/home/mohammadreza/nltk_data")
+nltk.download("punkt", download_dir="/home/mohammadreza/nltk_data")
 nltk.download("wordnet", download_dir="/home/mohammadreza/nltk_data")
 
 
@@ -31,9 +31,9 @@ def calculate_text_similarity(loader, has_tqdm=True, base_prompt=""):
         for part in re.findall(r"(?:\d[,.]|[^,.])*(?:[,.]|$)", text_batch[0]):
             embeddings.append((sentence_encoder([part]), part))
         coverage = extract_similar_part(embeddings, base_embed)
-        similairties.append(F.cosine_similarity(
-            base_embed, sentence_encoder([coverage])
-        ).item())
+        similairties.append(
+            F.cosine_similarity(base_embed, sentence_encoder([coverage])).item()
+        )
         embeddings.clear()
 
     return np.array(similairties).mean(), np.array(similairties).std()
@@ -66,7 +66,7 @@ def calculate_bert(loader, has_tqdm=True, base_prompt=""):
     for prompt_batch in loader:
         prompts.append(prompt_batch[0])
     bertscore = BERTScore()
-    scores = bertscore(prompts, [base_prompt])['f1'].cpu().numpy()
+    scores = bertscore(prompts, [base_prompt])["f1"].cpu().numpy()
     return np.array(scores).mean()
 
 
