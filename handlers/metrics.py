@@ -47,7 +47,7 @@ def simemb_handler(gpath):
 
 def simemb_text_handler(gpath):
     text_dataset = Loader.load_texts(gpath, batch_size=1)
-    mean_cosine, std_cosine = calculate_simemb_similarity(text_dataset, data='text')
+    mean_cosine, std_cosine = calculate_simemb_similarity(text_dataset, data="text")
     return f"Mean SimEmb: {mean_cosine}, SD: {std_cosine}"
 
 
