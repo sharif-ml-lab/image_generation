@@ -36,7 +36,7 @@ def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
                     output.append(metric_handlers.captioning_handler(gpath, cpath))
 
         if data == "text":
-
+            pass
 
     elif space == "genai":
         if data == "image":
@@ -67,13 +67,21 @@ if __name__ == "__main__":
         "-s", "--space", type=str, required=True, help="Space Name (e.g. metric, genai)"
     )
     parser.add_argument(
-        "-m", "--method", type=str, required=True, help="Method Name (e.g. quality, diversity, sdm)"
+        "-m",
+        "--method",
+        type=str,
+        required=True,
+        help="Method Name (e.g. quality, diversity, sdm)",
     )
     parser.add_argument(
         "-d", "--data", type=str, required=True, help="Kind of Data (e.g. image, text)"
     )
     parser.add_argument(
-        "-t", "--task", type=str, required=True, help="Task Name (e.g. inception, xlarge)"
+        "-t",
+        "--task",
+        type=str,
+        required=True,
+        help="Task Name (e.g. inception, xlarge)",
     )
     parser.add_argument(
         "-gp", "--gpath", type=str, required=False, help="Generated Data Path"

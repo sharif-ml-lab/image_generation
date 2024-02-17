@@ -10,5 +10,6 @@ def sdm_handler(opath, model, prompt, count):
 def juggernaut_handler(opath, prompt, count):
     generate_image_with_juggernaut(opath, prompt, count)
 
+
 def prompts_llm_handler(opath, model, prompt, count):
     generate_text(opath, model, prompt, count)
