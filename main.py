@@ -7,39 +7,47 @@ def main(space, task, gpath, rpath, cpath, opath, model, prompt, count):
     all_task = task == "report"
     output = []
 
-    if space == "quality":
-        if all_task or task == "inception":
-            output.append(metric_handlers.inception_handler(gpath))
-        if all_task or task == "frechet":
-            output.append(metric_handlers.frechet_handler(gpath, rpath))
-        if all_task or task == "realism":
-            output.append(metric_handlers.realism_handler(gpath))
+    if space == "metrics":
+        if data == "image":
+            if method == "quality":
+                if all_task or task == "inception":
+                    output.append(metric_handlers.inception_handler(gpath))
+                if all_task or task == "frechet":
+                    output.append(metric_handlers.frechet_handler(gpath, rpath))
+                if all_task or task == "realism":
+                    output.append(metric_handlers.realism_handler(gpath))
 
-    elif space == "diversity":
-        if all_task or task == "perceptual":
-            output.append(metric_handlers.perceptual_handler(gpath))
-        if all_task or task == "simemb":
-            output.append(metric_handlers.simemb_handler(gpath))
-        if all_task or task == "ssim":
-            output.append(metric_handlers.ssim_handler(gpath))
-        if all_task or task == "psnr":
-            output.append(metric_handlers.psnr_handler(gpath))
+            elif method == "diversity":
+                if all_task or task == "perceptual":
+                    output.append(metric_handlers.perceptual_handler(gpath))
+                if all_task or task == "simemb":
+                    output.append(metric_handlers.simemb_handler(gpath))
+                if all_task or task == "ssim":
+                    output.append(metric_handlers.ssim_handler(gpath))
+                if all_task or task == "psnr":
+                    output.append(metric_handlers.psnr_handler(gpath))
 
-    elif space == "alignment":
-        if all_task or task == "clip":
-            output.append(metric_handlers.clip_handler(gpath, cpath))
-        if all_task or task == "vqa":
-            output.append(metric_handlers.vqa_handler(gpath, cpath, model))
-        if all_task or task == "captioning":
-            output.append(metric_handlers.captioning_handler(gpath, cpath))
+            elif method == "alignment":
+                if all_task or task == "clip":
+                    output.append(metric_handlers.clip_handler(gpath, cpath))
+                if all_task or task == "vqa":
+                    output.append(metric_handlers.vqa_handler(gpath, cpath, model))
+                if all_task or task == "captioning":
+                    output.append(metric_handlers.captioning_handler(gpath, cpath))
+
+        if data == "text":
+
 
     elif space == "genai":
-        if task == "sdm":
-            generator_handlers.sdm_handler(opath, model, prompt, count)
-        if task == "juggernaut":
-            generator_handlers.juggernaut_handler(opath, prompt, count)
-        if task == "prompt":
-            generator_handlers.prompts_handler(opath, prompt, count)
+        if data == "image":
+            if method == "sdm":
+                if task == "xlarge":
+                    generator_handlers.sdm_handler(opath, model, prompt, count)
+                if task == "juggernaut":
+                    generator_handlers.juggernaut_handler(opath, prompt, count)
+        elif data == "text":
+            if method == "llm":
+                generator_handlers.prompts_llm_handler(opath, model, prompt, count)
 
     print("\n".join(output))
 
@@ -56,10 +64,16 @@ if __name__ == "__main__":
         description="Sharif ML-Lab Data Generation ToolKit"
     )
     parser.add_argument(
-        "-s", "--space", type=str, required=True, help="Space Name (e.g. metric, crawl)"
+        "-s", "--space", type=str, required=True, help="Space Name (e.g. metric, genai)"
     )
     parser.add_argument(
-        "-t", "--task", type=str, required=True, help="Task Name (e.g. inception, knn)"
+        "-m", "--method", type=str, required=True, help="Method Name (e.g. quality, diversity, sdm)"
+    )
+    parser.add_argument(
+        "-d", "--data", type=str, required=True, help="Kind of Data (e.g. image, text)"
+    )
+    parser.add_argument(
+        "-t", "--task", type=str, required=True, help="Task Name (e.g. inception, xlarge)"
     )
     parser.add_argument(
         "-gp", "--gpath", type=str, required=False, help="Generated Data Path"
