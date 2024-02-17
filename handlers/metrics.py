@@ -84,5 +84,7 @@ def captioning_handler(gpath, cpath):
 
 def sentence_handler(cpath, base_prompt):
     text_dataset = Loader.load_texts(cpath, batch_size=1)
-    mean_sentence, std_sentence = calculate_text_similarity(text_dataset, base_prompt=base_prompt)
+    mean_sentence, std_sentence = calculate_text_similarity(
+        text_dataset, base_prompt=base_prompt
+    )
     return f"Mean Captioning: {mean_sentence}, SD: {std_sentence}"

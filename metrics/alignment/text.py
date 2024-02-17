@@ -15,8 +15,6 @@ def calculate_text_similarity(loader, has_tqdm=True, base_prompt=""):
     iterations = tqdm(loader, desc="Calculating Captioning") if has_tqdm else loader
     for text_batch in iterations:
         text_embeddings = sentence_encoder(text_batch)
-        similarities.append(
-            F.cosine_similarity(base_prompt_embedding, text_embeddings)
-        )
+        similarities.append(F.cosine_similarity(base_prompt_embedding, text_embeddings))
 
     return torch.cat(similarities).mean().item(), torch.cat(similarities).std().item()
