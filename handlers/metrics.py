@@ -7,6 +7,7 @@ from metrics.quality.realism import calculate_realism_score
 from metrics.alignment.clip import calculate_clip_similarity
 from metrics.alignment.vqa import vqa_alignment_metric
 from metrics.alignment.captioning import calculate_captioning_similarity
+from metrics.alignment.text import calculate_text_similarity
 
 from metrics.diversity.simemb import calculate_simemb_similarity
 from metrics.diversity.perceptual import calculate_learned_perceptual_similarity
@@ -45,8 +46,8 @@ def simemb_handler(gpath):
     return f"Mean SimEmb: {mean_cosine}, SD: {std_cosine}"
 
 
-def simemb_text_handler(gpath):
-    text_dataset = Loader.load_texts(gpath, batch_size=1)
+def simemb_text_handler(cpath):
+    text_dataset = Loader.load_texts(cpath, batch_size=1)
     mean_cosine, std_cosine = calculate_simemb_similarity(text_dataset, data="text")
     return f"Mean SimEmb: {mean_cosine}, SD: {std_cosine}"
 
@@ -79,3 +80,9 @@ def captioning_handler(gpath, cpath):
     generated_dataset = Loader.load_captions(gpath, cpath, batch_size=1)
     mean_captioning, std_captioning = calculate_captioning_similarity(generated_dataset)
     return f"Mean Captioning: {mean_captioning}, SD: {std_captioning}"
+
+
+def sentence_handler(cpath, base_prompt):
+    text_dataset = Loader.load_texts(cpath, batch_size=1)
+    mean_sentence, std_sentence = calculate_text_similarity(text_dataset, base_prompt=base_prompt)
+    return f"Mean Captioning: {mean_sentence}, SD: {std_sentence}"

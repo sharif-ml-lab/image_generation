@@ -12,7 +12,7 @@ def calculate_simemb_similarity(loader, data="image"):
     if data == "image":
         from utils.models.embedding import SwinV2Tiny as model_obj
     elif data == "text":
-        from utils.models.sentence import MPNetEncoder as model_obj
+        from utils.models.sentence import MiniLMEncoder as model_obj
 
     embedding_model = model_obj(DEVICE)
 

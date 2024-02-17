@@ -38,7 +38,10 @@ def main(space, method, data, task, gpath, rpath, cpath, opath, model, prompt, c
         if data == "text":
             if method == "diversity":
                 if all_task or task == "simemb":
-                    output.append(metric_handlers.simemb_text_handler(gpath))
+                    output.append(metric_handlers.simemb_text_handler(cpath))
+            elif method == "alignment":
+                if all_task or task == "sentence":
+                    output.append(metric_handlers.sentence_handler(cpath, prompt))
 
     elif space == "genai":
         if data == "image":
