@@ -54,6 +54,10 @@ def main(space, method, data, task, gpath, rpath, cpath, opath, model, prompt, c
                     generator_handlers.sdm_handler(opath, model, prompt, count)
                 if task == "juggernaut":
                     generator_handlers.juggernaut_handler(opath, prompt, count)
+            if method == "bing":
+                if task == "dalle3":
+                    generator_handlers.bing_handler(prompt, count)
+
         elif data == "text":
             if method == "llm":
                 generator_handlers.prompts_llm_handler(opath, model, prompt, count)
@@ -89,7 +93,7 @@ if __name__ == "__main__":
         "-t",
         "--task",
         type=str,
-        required=True,
+        required=False,
         help="Task Name (e.g. inception, xlarge)",
     )
     parser.add_argument(

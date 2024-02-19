@@ -12,7 +12,6 @@ from utils.censors.censorship import extract_similar_part
 from nltk.translate.bleu_score import sentence_bleu
 from nltk.translate import meteor_score
 from nltk import word_tokenize
-from bert_score import score as bert_scorize
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
