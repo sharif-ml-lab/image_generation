@@ -7,7 +7,6 @@ from utils.load import Loader
 from generators.text.api import generate
 
 
-
 def generate_text(output_path, model, base_prompt, count):
     """
     Generaing Text By LLMs
