@@ -7,6 +7,7 @@ from utils.load import Loader
 from generators.juggernaut.api import generate
 from metrics.alignment.captioning import calculate_captioning_similarity
 from metrics.quality.realism import calculate_realism_score
+from generators.text.trigger import get_random_enhanced_prompt
 
 
 def get_qualification(temp_img_path, caption_path):
@@ -17,7 +18,7 @@ def get_qualification(temp_img_path, caption_path):
     return realism, captioning
 
 
-def generate_image_with_juggernaut(output_path, prompt, count):
+def generate_image_with_juggernaut(output_path, base_prompt, count):
     """
     Generaing Images By Juggernaut SDM
     """
@@ -33,6 +34,8 @@ def generate_image_with_juggernaut(output_path, prompt, count):
 
     qualifed_generated = 0
     while qualifed_generated < count:
+        prompt = get_random_enhanced_prompt(base_prompt)
+        print(prompt)
         image = generate(prompt)
         image.save(temp_image_path)
         pd.DataFrame({"image_name": ["temp.jpg"], "caption": prompt}).to_csv(
@@ -40,8 +43,7 @@ def generate_image_with_juggernaut(output_path, prompt, count):
         )
         quality, alignment = get_qualification(temp_path, temp_caption_csv)
         print(alignment)
-        if alignment > 0.5:
-            image_path = relpath + f"{qualifed_generated}.jpg"
-            image.save(image_path)
-            qualifed_generated += 1
-            print(qualifed_generated, "Image Generated")
+        image_path = relpath + f"{qualifed_generated}.jpg"
+        image.save(image_path)
+        qualifed_generated += 1
+        print(qualifed_generated, "Image Generated")

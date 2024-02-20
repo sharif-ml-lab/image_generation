@@ -13,19 +13,20 @@ from selenium.common.exceptions import TimeoutException
 from urllib import request
 
 
+logging.basicConfig(level=logging.INFO)
+
+
 LOG_FILE_PATH = 'utils/data/bing/update.log'
 USERS_FILE_PATH = 'utils/data/bing/users.json'
 headless = True
 global_driver = None
 
 
-def get_or_create_driver(url):
+def get_or_create_driver(url, should_reset=False):
     global global_driver, headless
-    try:
-        global_driver.get(url)
-        return global_driver
-    except:
+    if should_reset or global_driver is None or not global_driver.service.is_connectable():
         options = Options()
+        options.add_argument(f'--proxy-server="81.145.242.14:8080"')
         if headless:
             options.add_argument('--headless')
         global_driver = webdriver.Firefox(options=options)
@@ -82,7 +83,7 @@ def login_to_bing(username, password):
     try:
         WebDriverWait(driver, 6).until(EC.element_to_be_clickable((By.ID, 'bnp_btn_accept'))).click()
     except TimeoutException:
-        logging.warning("Accept button not found or not clickable")
+        pass
 
     try:
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "create_btn_c"))).click()
@@ -93,8 +94,9 @@ def login_to_bing(username, password):
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "idSIButton9"))).click()
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "acceptButton"))).click()
         time.sleep(10)
+        logging.info(f"Logined {username}")
         return True
-    except TimeoutException:
+    except:
         logging.warning(f"Can Not Login: {username}")
         return False
 
@@ -133,11 +135,12 @@ def update_user_credits():
                 user['credits'] = get_credits(user['email'])
                 logging.info(f"Updated credits for {user['email']}: {user['credits']}")
             else:
+                logging.info(f"Updated credits for {user['email']}: {user['credits']}")
                 user['credits'] = 0
             set_users_with_credits(users)
             driver.quit()
-    except:
-        pass
+    except Exception as e:
+        print(e)
     
 
 def download_images(user, prompt, path, max_images=5):
@@ -183,3 +186,7 @@ def process(prompts, title):
     finally:
         driver.quit()
     
+
+if __name__ == '__main__':
+    update_user_credits()
+    log_credit_update()
