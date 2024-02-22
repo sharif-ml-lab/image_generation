@@ -21,9 +21,9 @@ def main(space, method, data, task, gpath, rpath, cpath, opath, model, prompt, c
                 if all_task or task == "perceptual":
                     output.append(metric_handlers.perceptual_handler(gpath))
                 if all_task or task == "simemb":
-                    output.append(metric_handlers.simemb_image_handler(gpath))
+                    output.append(metric_handlers.sentence_image_handler(gpath))
                 if all_task or task == "ssim":
-                    output.append(metric_handlers.ssim_handler(gpath))
+                    output.append(metric_handlers.ssim_image_handler(gpath))
                 if all_task or task == "psnr":
                     output.append(metric_handlers.psnr_handler(gpath))
 
@@ -56,7 +56,7 @@ def main(space, method, data, task, gpath, rpath, cpath, opath, model, prompt, c
                     generator_handlers.juggernaut_handler(opath, prompt, count)
             if method == "bing":
                 if task == "dalle3":
-                    generator_handlers.bing_handler(prompt, count)
+                    generator_handlers.bing_handler(cpath, opath)
 
         elif data == "text":
             if method == "llm":

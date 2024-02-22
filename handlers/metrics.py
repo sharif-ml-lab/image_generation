@@ -43,7 +43,7 @@ def perceptual_handler(gpath):
     return f"Mean LPIPS: {mean_lpips:.3}, SD: {std_lpips:.3}"
 
 
-def sentence_handler(gpath):
+def sentence_image_handler(gpath):
     generated_dataset = Loader.load(gpath, batch_size=1)
     mean_cosine, std_cosine = calculate_image_diversity(generated_dataset)
     return f"Mean SimEmb: {mean_cosine:.3}, SD: {std_cosine:.3}"
@@ -66,7 +66,7 @@ def simemb_text_handler(cpath, base_prompt):
 def ssim_image_handler(gpath):
     generated_dataset = Loader.load(gpath, batch_size=1)
     mean_ssim, std_ssim = calculate_structural_diversity(generated_dataset)
-    return f"Mean SSIM: {mean_ssim:.3}, Standard Deviation: {std_ssim:.3}"
+    return f"Mean SSIM: {mean_ssim:.3}, SD: {std_ssim:.3}"
 
 
 def psnr_handler(gpath):

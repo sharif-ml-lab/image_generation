@@ -20,7 +20,7 @@ services:
     container_name: ollama
     image: ollama/ollama
     volumes:
-      - ollama:/root/.ollama
+      - ./ollama:/root/.ollama
     ports:
       - 11434:1143
     command: ollama run llama2:70b
@@ -29,7 +29,7 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
+              count: 2
               capabilities: [gpu]
   
   metrics:

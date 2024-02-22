@@ -18,7 +18,7 @@ def calculate_image_diversity(loader):
     for data_batch in tqdm(loader, desc="Store Embedding SimEmb"):
         inputs = transforms.ToPILImage()(data_batch[0])
         embedding_list.append(embedding_model(inputs))
-    return compute_pairwise_similarity(embedding_list)
+    return compute_pairwise_similarity(embedding_list, dim=1)
 
 
 def calculate_text_diversity(loader, base_prompt):
@@ -36,12 +36,12 @@ def calculate_text_diversity(loader, base_prompt):
     return compute_pairwise_similarity(embedding_final)
 
 
-def compute_pairwise_similarity(embeddings):
+def compute_pairwise_similarity(embeddings, dim=0):
     size = len(embeddings)
     similarity_matrix = np.zeros(size)
     for i in tqdm(range(1, size), desc="Calculating SimEmb"):
         similarity_matrix[i] = 1 - F.cosine_similarity(
-            embeddings[i], embeddings[i - 1], dim=0
+            embeddings[i], embeddings[i - 1], dim=dim
         )
     flat = similarity_matrix.ravel()
     flat_non_zero = flat[flat != 0]

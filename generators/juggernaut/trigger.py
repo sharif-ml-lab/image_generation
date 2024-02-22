@@ -7,7 +7,6 @@ from utils.load import Loader
 from generators.juggernaut.api import generate
 from metrics.alignment.captioning import calculate_captioning_similarity
 from metrics.quality.realism import calculate_realism_score
-from generators.text.trigger import get_random_enhanced_prompt
 
 
 def get_qualification(temp_img_path, caption_path):
@@ -18,7 +17,7 @@ def get_qualification(temp_img_path, caption_path):
     return realism, captioning
 
 
-def generate_image_with_juggernaut(output_path, base_prompt, count):
+def generate_image_with_juggernaut(loader, output_path):
     """
     Generaing Images By Juggernaut SDM
     """
@@ -32,18 +31,15 @@ def generate_image_with_juggernaut(output_path, base_prompt, count):
     os.makedirs(temp_path, exist_ok=True)
     os.makedirs(temp_caption_path, exist_ok=True)
 
-    qualifed_generated = 0
-    while qualifed_generated < count:
-        prompt = get_random_enhanced_prompt(base_prompt)
-        print(prompt)
-        image = generate(prompt)
-        image.save(temp_image_path)
-        pd.DataFrame({"image_name": ["temp.jpg"], "caption": prompt}).to_csv(
-            temp_caption_csv, index=False, sep="|"
-        )
-        quality, alignment = get_qualification(temp_path, temp_caption_csv)
-        print(alignment)
-        image_path = relpath + f"{qualifed_generated}.jpg"
-        image.save(image_path)
-        qualifed_generated += 1
-        print(qualifed_generated, "Image Generated")
+    for prompt_batch in loader:
+        prompt = prompt_batch[0]
+        for _ in range(4):
+            image = generate(prompt)
+            image.save(temp_image_path)
+            pd.DataFrame({"image_name": ["temp.jpg"], "caption": prompt}).to_csv(
+                temp_caption_csv, index=False, sep="|"
+            )
+            quality, alignment = get_qualification(temp_path, temp_caption_csv)
+            print(alignment, quality)
+            image_path = relpath + f"{qualifed_generated}-{_}.jpg"
+            image.save(image_path)

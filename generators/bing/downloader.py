@@ -2,7 +2,10 @@ import os
 import json
 import logging
 import datetime
+import pandas as pd
+import shortuuid
 import time
+from generators.bing.proxy import get_proxy
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
@@ -30,7 +33,7 @@ def get_or_create_driver(url, should_reset=False):
         or not global_driver.service.is_connectable()
     ):
         options = Options()
-        options.add_argument(f'--proxy-server="81.145.242.14:8080"')
+        options.add_argument(f'--proxy-server="{get_proxy()}"')
         if headless:
             options.add_argument("--headless")
         global_driver = webdriver.Firefox(options=options)
@@ -68,12 +71,13 @@ def set_users_with_credits(users):
         json.dump(users, file, indent=4)
 
 
-def process_prompt(prompt, path):
+def process_prompt(prompt, path, output):
     users = get_users_with_credits()
     for user in users:
         if user["credits"] > 0:
             logined = login_to_bing(user["email"], user["password"])
-            downloaded = download_images(user, prompt, path)
+            downloaded = download_images(user, prompt, output, path)
+            print(logined, downloaded)
             if logined and downloaded:
                 break
             else:
@@ -83,7 +87,7 @@ def process_prompt(prompt, path):
 
 
 def login_to_bing(username, password):
-    driver = get_or_create_driver("https://www.bing.com/images/create")
+    driver = get_or_create_driver("https://www.bing.com/images/create", should_reset=True)
     try:
         WebDriverWait(driver, 6).until(
             EC.element_to_be_clickable((By.ID, "bnp_btn_accept"))
@@ -169,7 +173,7 @@ def update_user_credits():
         print(e)
 
 
-def download_images(user, prompt, path, max_images=5):
+def download_images(user, prompt, path, output, max_images=4):
     ensure_directory_exists(path)
     driver = get_or_create_driver("https://www.bing.com/images/create")
     try:
@@ -189,13 +193,14 @@ def download_images(user, prompt, path, max_images=5):
             EC.presence_of_all_elements_located((By.XPATH, '//img[@class="mimg"]'))
         )
         images = driver.find_elements(By.XPATH, '//img[@class="mimg"]')
-
-        for img in images[:max_images]:
+        random_id = shortuuid.ShortUUID().random(length=8)
+        for idx, img in enumerate(images[:max_images], start=1):
+            output
             src = img.get_attribute("src")
             img_id = src.split("/")[-1].split("?")[0]
             full_size = src.split("?")[0] + "?pid=ImgGn"
-
-            filename = os.path.join(path, f"{img_id}.jpg")
+            
+            filename = os.path.join(path, f"{random_id}-{idx}.jpg")
             if not os.path.exists(filename):
                 request.urlretrieve(full_size, filename)
                 logging.info(f"Downloaded {filename}")
@@ -206,18 +211,23 @@ def download_images(user, prompt, path, max_images=5):
         return False
 
 
-def process(prompts, title):
+def process(prompts, opath):
     if should_update_credits():
         update_user_credits()
         log_credit_update()
 
+    output = {
+        'img_path': [],
+        'caption': []
+    }
     driver = get_or_create_driver("https://www.bing.com/images/create")
     try:
         for prompt in prompts:
-            process_prompt(prompt, f"{title}")
+            print(prompt)
+            process_prompt(prompt, opath, opath)
     finally:
-        driver.quit()
-
+        pd.DataFrame(output).to_csv(opath + '/caption.csv')
+        
 
 if __name__ == "__main__":
     update_user_credits()

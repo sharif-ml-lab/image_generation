@@ -23,7 +23,7 @@ def calculate_ssim(img1, img2):
         img1,
         img2,
         multichannel=True,
-        win_size=7,
+        win_size=31,
         channel_axis=0,
         data_range=img1.max() - img1.min(),
     )
