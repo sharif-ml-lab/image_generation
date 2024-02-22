@@ -87,7 +87,9 @@ def process_prompt(prompt, path, output):
 
 
 def login_to_bing(username, password):
-    driver = get_or_create_driver("https://www.bing.com/images/create", should_reset=True)
+    driver = get_or_create_driver(
+        "https://www.bing.com/images/create", should_reset=True
+    )
     try:
         WebDriverWait(driver, 6).until(
             EC.element_to_be_clickable((By.ID, "bnp_btn_accept"))
@@ -199,7 +201,7 @@ def download_images(user, prompt, path, output, max_images=4):
             src = img.get_attribute("src")
             img_id = src.split("/")[-1].split("?")[0]
             full_size = src.split("?")[0] + "?pid=ImgGn"
-            
+
             filename = os.path.join(path, f"{random_id}-{idx}.jpg")
             if not os.path.exists(filename):
                 request.urlretrieve(full_size, filename)
@@ -216,18 +218,15 @@ def process(prompts, opath):
         update_user_credits()
         log_credit_update()
 
-    output = {
-        'img_path': [],
-        'caption': []
-    }
+    output = {"img_path": [], "caption": []}
     driver = get_or_create_driver("https://www.bing.com/images/create")
     try:
         for prompt in prompts:
             print(prompt)
             process_prompt(prompt, opath, opath)
     finally:
-        pd.DataFrame(output).to_csv(opath + '/caption.csv')
-        
+        pd.DataFrame(output).to_csv(opath + "/caption.csv")
+
 
 if __name__ == "__main__":
     update_user_credits()
