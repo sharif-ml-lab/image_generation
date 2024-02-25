@@ -14,5 +14,6 @@ opencv-python
 sentence-transformers
 transformers
 diffusers
+open-clip-torch
 shortuuid
 bs4

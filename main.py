@@ -3,7 +3,20 @@ import logging
 import os
 
 
-def main(space, method, data, task, gpath, rpath, cpath, opath, model, prompt, count):
+def main(
+    space,
+    method,
+    data,
+    task,
+    gpath,
+    rpath,
+    cpath,
+    opath,
+    model,
+    prompt,
+    neg_prompt,
+    count,
+):
     all_task = task == "report"
     output = []
 
@@ -62,6 +75,13 @@ def main(space, method, data, task, gpath, rpath, cpath, opath, model, prompt, c
             if method == "llm":
                 generator_handlers.prompts_llm_handler(opath, model, prompt, count)
 
+    elif space == "experiment":
+        if data == "image":
+            if method == "tendency":
+                experiment_handlers.tendency_handler(gpath, prompt, neg_prompt)
+            if method == "noise":
+                experiment_handlers.noise_handler(prompt, neg_prompt)
+
     print("\n".join(output))
 
 
@@ -72,6 +92,7 @@ if __name__ == "__main__":
 
     import handlers.generators as generator_handlers
     import handlers.metrics as metric_handlers
+    import handlers.experiments as experiment_handlers
 
     parser = argparse.ArgumentParser(
         description="Sharif ML-Lab Data Generation ToolKit"
@@ -109,7 +130,10 @@ if __name__ == "__main__":
         "-op", "--opath", type=str, required=False, help="Output Data Path"
     )
     parser.add_argument("-m", "--model", type=str, required=False, help="Model Name")
-    parser.add_argument("-p", "--prompt", type=str, required=False, help="Prompt Text")
+    parser.add_argument("-p", "--prompt", type=str, required=False, help="Prompt")
+    parser.add_argument(
+        "-np", "--neg-prompt", type=str, required=False, help="Negative Prompt"
+    )
     parser.add_argument(
         "-n", "--count", type=int, required=False, help="Number of Images To Generate"
     )

@@ -28,7 +28,8 @@ class SwinV2Tiny(Embedding):
         self.model = Swinv2Model.from_pretrained(model_name).to(self.device)
 
     def forward(self, image):
-        inputs = self.processor(image, return_tensors="pt").to(self.device)
-        outputs = self.model(**inputs)
-        embedding = outputs.last_hidden_state
+        with torch.no_grad():
+            inputs = self.processor(image, return_tensors="pt").to(self.device)
+            outputs = self.model(**inputs)
+            embedding = outputs.last_hidden_state
         return embedding.reshape(1, -1)
