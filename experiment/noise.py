@@ -32,10 +32,10 @@ def noise_experiment(prompt, neg_prompt):
                 negative_tendency.append(props[0][1])
             mean_positive = np.array(positive_tendency).mean()
             mean_negative = np.array(negative_tendency).mean()
-            result["model"].append('_'.join(args))
+            result["model"].append("_".join(args))
             result["positive"].append(mean_positive)
             result["negative"].append(mean_negative)
             del model
             torch.cuda.empty_cache()
-            print('_'.join(args), "Done")
+            print("_".join(args), "Done")
     pd.DataFrame(result).to_csv("noise_experiment.csv", index=False)

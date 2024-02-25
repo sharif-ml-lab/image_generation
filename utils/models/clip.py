@@ -4,6 +4,7 @@ import open_clip
 from transformers import CLIPProcessor, CLIPModel
 from transformers import AlignProcessor, AlignModel
 from transformers import AltCLIPModel, AltCLIPProcessor
+from transformers import FlavaProcessor, FlavaModel
 from transformers import logging as transformers_logging
 
 
@@ -18,6 +19,22 @@ class Clip(nn.Module):
 
     def forward(self, image):
         pass
+
+
+class FlavaClip(Clip):
+    def __init__(self, device, model_name="facebook/flava-full"):
+        super(AltClip, self).__init__(device)
+        self.model = FlavaModel.from_pretrained(model_name).to(device)
+        self.processor = FlavaProcessor.from_pretrained(model_name)
+
+    def forward(self, image, text_list):
+        with torch.no_grad():
+            inputs = self.processor(
+                text=text_list, images=[image], return_tensors="pt", padding="max_length", max_length=77
+            ).to(self.device)
+            outputs = self.model(**inputs)
+            logits_per_image = outputs.logits_per_image
+        return logits_per_image.softmax(dim=1).cpu().numpy()
 
 
 class AltClip(Clip):
@@ -38,13 +55,15 @@ class AltClip(Clip):
 
 class AlignClip(Clip):
     def __init__(self, device, model_name="kakaobrain/align-base"):
-        super(AltClip, self).__init__(device) 
+        super(AltClip, self).__init__(device)
         self.model = AlignModel.from_pretrained(model_name).to(device)
         self.processor = AlignProcessor.from_pretrained(model_name)
 
     def forward(self, image, text_list):
         with torch.no_grad():
-            inputs = self.processor(text=candidate_labels, images=image, return_tensors="pt").to(self.device)
+            inputs = self.processor(
+                text=candidate_labels, images=image, return_tensors="pt"
+            ).to(self.device)
             outputs = self.model(**inputs)
             logits_per_image = outputs.logits_per_image
         return logits_per_image.softmax(dim=1).cpu().numpy()

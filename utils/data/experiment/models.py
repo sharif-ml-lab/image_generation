@@ -1,4 +1,4 @@
-from utils.models.clip import AltClip, ViTOpenAIClip
+from utils.models.clip import AltClip, AlignClip, FlavaClip, ViTOpenAIClip
 
 CONFIG = {
     "openai": {
@@ -19,9 +19,16 @@ CONFIG = {
         ],
         "handler": ViTOpenAIClip,
     },
-    "alt": {"models": [
-        ["BAAI/AltCLIP"],
-        ["kakaobrain/align-base"]
-    ],
-    "handler": AltClip},
+    "alt": {
+        "models": [["BAAI/AltCLIP"]],
+        "handler": AltClip,
+    },
+    "align": {
+        "models": [["kakaobrain/align-base"]],
+        "handler": AlignClip
+    },
+    "align": {
+        "models": [["facebook/flava-full"]],
+        "handler": FlavaClip
+    }
 }
