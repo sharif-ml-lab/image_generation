@@ -76,7 +76,7 @@ def process_prompt(prompt, path, output):
     for user in users:
         if user["credits"] > 0:
             logined = login_to_bing(user["email"], user["password"])
-            downloaded = download_images(user, prompt, output, path)
+            downloaded = download_images(user, prompt, path, output)
             print(logined, downloaded)
             if logined and downloaded:
                 break
@@ -191,13 +191,14 @@ def download_images(user, prompt, path, output, max_images=4):
         new_credits = user["credits"] - 1
         update_user_credit_in_file(user["email"], new_credits)
 
-        WebDriverWait(driver, 30).until(
+        WebDriverWait(driver, 80).until(
             EC.presence_of_all_elements_located((By.XPATH, '//img[@class="mimg"]'))
         )
         images = driver.find_elements(By.XPATH, '//img[@class="mimg"]')
         random_id = shortuuid.ShortUUID().random(length=8)
         for idx, img in enumerate(images[:max_images], start=1):
-            output
+            output['img_path'].append(f"{random_id}-{idx}.jpg")
+            output['caption'].append(prompt)
             src = img.get_attribute("src")
             img_id = src.split("/")[-1].split("?")[0]
             full_size = src.split("?")[0] + "?pid=ImgGn"
@@ -222,8 +223,7 @@ def process(prompts, opath):
     driver = get_or_create_driver("https://www.bing.com/images/create")
     try:
         for prompt in prompts:
-            print(prompt)
-            process_prompt(prompt, opath, opath)
+            process_prompt(prompt, opath, output)
     finally:
         pd.DataFrame(output).to_csv(opath + "/caption.csv")
 

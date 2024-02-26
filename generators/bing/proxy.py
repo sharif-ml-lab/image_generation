@@ -17,9 +17,9 @@ def get_proxy():
             https = tds[6].text.strip()
 
             if https == "yes":
-                proxy = f"{ip}:{port}"
+                proxy = f"https://{ip}:{port}"
             else:
-                proxy = f"{ip}:{port}"
+                proxy = f"http://{ip}:{port}"
 
             proxies.append(proxy)
         except IndexError:
