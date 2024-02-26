@@ -197,8 +197,8 @@ def download_images(user, prompt, path, output, max_images=4):
         images = driver.find_elements(By.XPATH, '//img[@class="mimg"]')
         random_id = shortuuid.ShortUUID().random(length=8)
         for idx, img in enumerate(images[:max_images], start=1):
-            output['img_path'].append(f"{random_id}-{idx}.jpg")
-            output['caption'].append(prompt)
+            output["img_path"].append(f"{random_id}-{idx}.jpg")
+            output["caption"].append(prompt)
             src = img.get_attribute("src")
             img_id = src.split("/")[-1].split("?")[0]
             full_size = src.split("?")[0] + "?pid=ImgGn"
