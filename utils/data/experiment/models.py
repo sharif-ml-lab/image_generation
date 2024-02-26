@@ -23,12 +23,6 @@ CONFIG = {
         "models": [["BAAI/AltCLIP"]],
         "handler": AltClip,
     },
-    "align": {
-        "models": [["kakaobrain/align-base"]],
-        "handler": AlignClip
-    },
-    "align": {
-        "models": [["facebook/flava-full"]],
-        "handler": FlavaClip
-    }
+    "align": {"models": [["kakaobrain/align-base"]], "handler": AlignClip},
+    "align": {"models": [["facebook/flava-full"]], "handler": FlavaClip},
 }

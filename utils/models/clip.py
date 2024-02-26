@@ -30,7 +30,11 @@ class FlavaClip(Clip):
     def forward(self, image, text_list):
         with torch.no_grad():
             inputs = self.processor(
-                text=text_list, images=[image], return_tensors="pt", padding="max_length", max_length=77
+                text=text_list,
+                images=[image],
+                return_tensors="pt",
+                padding="max_length",
+                max_length=77,
             ).to(self.device)
             outputs = self.model(**inputs)
             logits_per_image = outputs.logits_per_image

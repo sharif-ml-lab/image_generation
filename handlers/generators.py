@@ -21,7 +21,7 @@ def prompts_llm_handler(opath, model, prompt, count):
 
 
 def llm_diversity_handler():
-    save_cluster_data('utils/data/text/cluster.pkl')
+    save_cluster_data("utils/data/text/cluster.pkl")
 
 
 def bing_handler(cpath, opath):

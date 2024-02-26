@@ -64,18 +64,25 @@ activities = [
     "eating or drinking",
 ]
 
+
 def sample_from_clusters(total_samples):
     try:
-        clustered_data, kmeans = load_cluster_data(filename='utils/data/text/cluster.pkl')
+        clustered_data, kmeans = load_cluster_data(
+            filename="utils/data/text/cluster.pkl"
+        )
     except:
-        logging.error("RUN --space genai --method config --task llm-diversity --data text")
+        logging.error(
+            "RUN --space genai --method config --task llm-diversity --data text"
+        )
         return
     num_clusters = len(clustered_data)
-    samples_per_cluster = max(total_samples // num_clusters, 1)  
+    samples_per_cluster = max(total_samples // num_clusters, 1)
     sampled_combinations = []
     for cluster in clustered_data:
-        if cluster: 
-            sampled_combinations.extend(random.sample(cluster, min(samples_per_cluster, len(cluster))))
+        if cluster:
+            sampled_combinations.extend(
+                random.sample(cluster, min(samples_per_cluster, len(cluster)))
+            )
     remaining_samples = total_samples - len(sampled_combinations)
     while remaining_samples > 0:
         for cluster in clustered_data:
@@ -87,25 +94,29 @@ def sample_from_clusters(total_samples):
     return sampled_combinations
 
 
-def save_cluster_data(filename='utils/data/text/cluster.pkl'):
-    combinations = list(itertools.product(
-        skin_colors_men,
-        dress_types_men,
-        ages_man,
-        skin_colors_women,
-        dress_types_women,
-        ages_woman,
-        financial_situations,
-        areas,
-        activities,
-    ))
+def save_cluster_data(filename="utils/data/text/cluster.pkl"):
+    combinations = list(
+        itertools.product(
+            skin_colors_men,
+            dress_types_men,
+            ages_man,
+            skin_colors_women,
+            dress_types_women,
+            ages_woman,
+            financial_situations,
+            areas,
+            activities,
+        )
+    )
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     encoder = MiniLMEncoder(device)
     encoded_combinations = []
     for i in tqdm(range(len(combinations)), desc="Calculating Embedding"):
         with contextlib.redirect_stdout(None):
-            encoded_combinations.append(encoder(','.join(combinations[i])).cpu().numpy())
+            encoded_combinations.append(
+                encoder(",".join(combinations[i])).cpu().numpy()
+            )
 
     num_clusters = 10
     kmeans = KMeans(n_clusters=num_clusters, random_state=0).fit(encoded_combinations)
@@ -117,7 +128,7 @@ def save_cluster_data(filename='utils/data/text/cluster.pkl'):
         pickle.dump((clustered_combinations, kmeans), f)
 
 
-def load_cluster_data(filename='utils/data/text/cluster.pkl'):
+def load_cluster_data(filename="utils/data/text/cluster.pkl"):
     with open(filename, "rb") as f:
         clustered_data, kmeans_model = pickle.load(f)
     return clustered_data, kmeans_model
