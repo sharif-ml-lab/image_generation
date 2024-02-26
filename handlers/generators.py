@@ -5,6 +5,7 @@ from generators.juggernaut.trigger import generate_image_with_juggernaut
 from generators.bing.trigger import generate_image_with_bing
 
 from generators.text.trigger import generate_text
+from generators.text.diversity import save_cluster_data
 
 
 def sdm_handler(opath, model, prompt, count):
@@ -17,6 +18,10 @@ def juggernaut_handler(opath, prompt, count):
 
 def prompts_llm_handler(opath, model, prompt, count):
     generate_text(opath, model, prompt, count)
+
+
+def llm_diversity_handler():
+    save_cluster_data('utils/data/text/cluster.pkl')
 
 
 def bing_handler(cpath, opath):

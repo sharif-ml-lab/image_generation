@@ -19,7 +19,7 @@ def main(
 ):
     all_task = task == "report"
     output = []
-
+    
     if space == "metric":
         if data == "image":
             if method == "quality":
@@ -74,7 +74,10 @@ def main(
         elif data == "text":
             if method == "llm":
                 generator_handlers.prompts_llm_handler(opath, model, prompt, count)
-
+            if method == "config":
+                if task == "llm-diversity":
+                    generator_handlers.llm_diversity_handler()
+                
     elif space == "experiment":
         if data == "image":
             if method == "tendency":
