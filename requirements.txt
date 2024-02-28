@@ -17,3 +17,4 @@ diffusers
 open-clip-torch
 shortuuid
 bs4
+selenium

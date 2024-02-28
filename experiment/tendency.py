@@ -13,8 +13,6 @@ MODEL_NAMES = models.CONFIG
 def tendency_experiment(loader, prompt, neg_prompt):
     result = {"model": [], "positive": [], "negative": []}
     for api in MODEL_NAMES:
-        if api != "alt":
-            continue
         for model_type, mapper in MODEL_NAMES[api].items():
             handler = mapper["handler"]
             for args in mapper["models"]:
