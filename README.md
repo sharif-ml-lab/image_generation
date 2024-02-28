@@ -3,25 +3,30 @@
 ## Installation
 - `docker compose up -d`
 
+
+## Experiment CLI
+`./main.py --space experiment --image data --method tendecny|noise [--gpath <generated_path>] --prompt <true_caption> --neg-prompt <false_caption>
+
+
 ## Metric CLI
-`./main.py --space <metric_type> --task <metric_name> --gpath <generated_path> [--rpath <real_path>]`
+`./main.py --space metric --image data --method <metric_type> --task <metric_name> --gpath <generated_path> [--rpath <real_path>]`
 
 
 Inception Score
-- `--space quality --task inception`
+- `--method quality --task inception`
 
 Frechet Score
-- `--space quality --task frechet`
+- `--method quality --task frechet`
 
 Clip Score
-- `--space alignment --task clip`
+- `--method alignment --task clip`
 
 VQA Responses
-- `--space alignemnt --task vqa --model <model_name>`
+- `--method alignemnt --task vqa --model <model_name>`
 
 
 Perceptual Score
-- `--space diversity --task perceptual`
+- `--method diversity --task perceptual`
 
 -------
 
