@@ -12,23 +12,69 @@ url = "http://localhost:11434/api/chat"
 bertscore = BERTScore()
 
 
-def generate_non_stereotypical_prompt(
-    base_prompt, previous_prompts, combination, model="llama2:70b"
-):
-    enhanced_prompt = enhance_prompt(base_prompt, previous_prompts, model, combination)
-    if enhanced_prompt:
-        print("Generated Prompt Length:", len(enhanced_prompt))
-        return enhanced_prompt
-    else:
-        logging.warning(
-            f"Unable to generate an enhanced prompt for combination {combination} and base prompt: {base_prompt}"
+def summarize_prompt(maintain_prompt, text, max_lengh, model):
+    summarize_request = f'Summarize the following prompt "{text}" in {max_lengh} max characters by keeping this main scenario ({maintain_prompt}). Output the final result prompt in a string format enclosed within double quotation marks.'
+    body = {
+        "model": model,
+        "options": {"temperature": 0.65},
+        "messages": [
+            {
+                "role": "system",
+                "content": "Hello, I am an AI assistant specialized in summarizing prompt which keep much information from the input as much as possible.",
+            },
+            {"role": "user", "content": summarize_request},
+        ],
+        "stream": False,
+    }
+    for attempt in range(5):
+        try:
+            req = requests.post(url=url, json=body)
+            req.raise_for_status()
+
+            prompt_raw = req.json()["message"]["content"]
+            prompt = re.search(r'"([^"]+)"', prompt_raw)
+
+            if prompt and len(prompt.group(1).strip()) > 200:
+                enhanced_prompt = prompt.group(1)
+                return enhanced_prompt
+            else:
+                body["options"]["temperature"] += 0.03
+                logging.warning("Bad/Short Output")
+        except requests.RequestException as e:
+            logging.error(f"Request error: {e}")
+        except Exception as e:
+            logging.error(f"Unexpected error: {e}")
+
+    logging.warning(
+        f"Failed to generate a sufficiently summarized prompt after 3 attempts."
+    )
+    return None
+
+
+
+def summarize(maintain_prompt, text, max_lengh=460, model="llama2:70b"):
+    for _ in range(3):
+        prompt = summarize_prompt(
+            maintain_prompt, text, max_lengh, model
         )
+        if prompt is not None:
+            return prompt
+        else:
+            logging.warning("Try Again")
+    logging.warning(
+        f"Failed to generate an summarized prompt after 3 attempts for base prompt: {maintain_prompt}"
+    )
+    return False
 
 
 def enhance_prompt(
     base_prompt, previous_prompts, model, combination, similarity_threshold=0.975
 ):
     enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for a man ({combination[0]}) with dress type ({combination[1]}) and age ({combination[2]}) and also a woman ({combination[3]}), with dress type ({combination[4]}) and age ({combination[5]}), financial situations ({combination[6]}), area ({combination[7]}), **while emphasizing on maintaining the core scenario**: **"{base_prompt.replace("[Activity]", combination[-1])}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
+    if '[Single Woman]' in base_prompt:
+        enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for woman ({combination[3]}), with dress type ({combination[4]}) and age ({combination[5]}), financial situations ({combination[6]}), area ({combination[7]}), **while emphasizing on maintaining the core scenario**: **"{base_prompt.replace("[Activity]", combination[-1])}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
+    if '[Single Man]' in base_prompt:
+        enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for man ({combination[0]}) with dress type ({combination[1]}) and age ({combination[2]}), financial situations ({combination[6]}), area ({combination[7]}), **while emphasizing on maintaining the core scenario**: **"{base_prompt.replace("[Activity]", combination[-1])}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
     body = {
         "model": model,
         "options": {"temperature": 0.64},
@@ -77,8 +123,8 @@ def enhance_prompt(
 
 def generate(base_prompt, previous_prompts, combination, model="llama2:70b"):
     for _ in range(3):
-        prompt = generate_non_stereotypical_prompt(
-            base_prompt, previous_prompts, combination, model
+        prompt = enhance_prompt(
+            base_prompt, previous_prompts, model, combination 
         )
         if prompt is not None:
             return prompt

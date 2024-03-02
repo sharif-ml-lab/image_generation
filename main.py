@@ -73,7 +73,10 @@ def main(
 
         elif data == "text":
             if method == "llm":
-                generator_handlers.prompts_llm_handler(opath, model, prompt, count)
+                if task == "diverse":
+                    generator_handlers.prompts_llm_handler(opath, model, prompt, count)
+                if task == "summarize":
+                    generator_handlers.summarize_llm_handler(cpath, opath, model, prompt)
             if method == "config":
                 if task == "llm-diversity":
                     generator_handlers.llm_diversity_handler()

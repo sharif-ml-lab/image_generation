@@ -120,7 +120,7 @@ def save_cluster_data(filename="utils/data/text/cluster.pkl"):
 
     num_clusters = 10
     kmeans = KMeans(n_clusters=num_clusters, random_state=0).fit(encoded_combinations)
-
+    
     clustered_combinations = [[] for _ in range(num_clusters)]
     for comb, label in zip(combinations, kmeans.labels_):
         clustered_combinations[label].append(comb)
