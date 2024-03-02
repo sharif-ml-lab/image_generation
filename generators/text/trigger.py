@@ -30,7 +30,9 @@ def summarize_text(loader, output_path, model, maintain_prompt):
         max_lengh = 460
         text = text_batch[0]
         if len(text) > max_lengh:
-            summarized = summarize(maintain_prompt, text, max_lengh=max_lengh, model="llama2:70b")
+            summarized = summarize(
+                maintain_prompt, text, max_lengh=max_lengh, model="llama2:70b"
+            )
         else:
             summarized = text
         texts.append(summarized if summarized != False else text)

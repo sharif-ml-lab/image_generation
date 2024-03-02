@@ -51,12 +51,9 @@ def summarize_prompt(maintain_prompt, text, max_lengh, model):
     return None
 
 
-
 def summarize(maintain_prompt, text, max_lengh=460, model="llama2:70b"):
     for _ in range(3):
-        prompt = summarize_prompt(
-            maintain_prompt, text, max_lengh, model
-        )
+        prompt = summarize_prompt(maintain_prompt, text, max_lengh, model)
         if prompt is not None:
             return prompt
         else:
@@ -71,9 +68,9 @@ def enhance_prompt(
     base_prompt, previous_prompts, model, combination, similarity_threshold=0.975
 ):
     enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for a man ({combination[0]}) with dress type ({combination[1]}) and age ({combination[2]}) and also a woman ({combination[3]}), with dress type ({combination[4]}) and age ({combination[5]}), financial situations ({combination[6]}), area ({combination[7]}), **while emphasizing on maintaining the core scenario**: **"{base_prompt.replace("[Activity]", combination[-1])}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
-    if '[Single Woman]' in base_prompt:
+    if "[Single Woman]" in base_prompt:
         enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for woman ({combination[3]}), with dress type ({combination[4]}) and age ({combination[5]}), financial situations ({combination[6]}), area ({combination[7]}), **while emphasizing on maintaining the core scenario**: **"{base_prompt.replace("[Activity]", combination[-1])}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
-    if '[Single Man]' in base_prompt:
+    if "[Single Man]" in base_prompt:
         enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for man ({combination[0]}) with dress type ({combination[1]}) and age ({combination[2]}), financial situations ({combination[6]}), area ({combination[7]}), **while emphasizing on maintaining the core scenario**: **"{base_prompt.replace("[Activity]", combination[-1])}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
     body = {
         "model": model,
@@ -123,9 +120,7 @@ def enhance_prompt(
 
 def generate(base_prompt, previous_prompts, combination, model="llama2:70b"):
     for _ in range(3):
-        prompt = enhance_prompt(
-            base_prompt, previous_prompts, model, combination 
-        )
+        prompt = enhance_prompt(base_prompt, previous_prompts, model, combination)
         if prompt is not None:
             return prompt
         else:
