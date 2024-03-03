@@ -41,7 +41,6 @@ def get_proxy():
                 proxies.append(proxy)
         except IndexError:
             continue
-    print("\n".join(proxies))
     return random.choice(proxies) if proxies else None
 
 

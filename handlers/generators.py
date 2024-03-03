@@ -26,7 +26,7 @@ def summarize_llm_handler(cpath, opath, model, prompt):
 
 
 def llm_diversity_handler():
-    save_cluster_data("utils/data/text/cluster.pkl")
+    save_cluster_data("utils/data/text/cluster_2.pkl")
 
 
 def bing_handler(cpath, opath):

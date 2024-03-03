@@ -1,10 +1,11 @@
 import numpy as np
 import torch
 from tqdm import tqdm
-from bert_score import score as bert_scorize
+from torchmetrics.text.bert import BERTScore
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+bertscore = BERTScore()
 
 
 def calculate_bert_diversity(loader):
@@ -14,10 +15,9 @@ def calculate_bert_diversity(loader):
     for i in tqdm(range(1, size), desc="Calculating BERT"):
         text1 = loader.dataset[i]
         text2 = loader.dataset[i - 1]
-        P, R, F1 = bert_scorize(
-            [text1], [text2], lang="en", verbose=False, device=DEVICE
+        similarity[i] = (
+            bertscore([text1], [text2])["f1"].cpu().numpy()
         )
-        similarity[i] = F1
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]
 
