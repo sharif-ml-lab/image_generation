@@ -67,18 +67,19 @@ def summarize(maintain_prompt, text, max_lengh=460, model="llama2:70b"):
 def enhance_prompt(
     base_prompt, previous_prompts, model, combination, similarity_threshold=0.975
 ):
-    enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for a man ({combination[0]}) with dress type ({combination[1]}) and age ({combination[2]}) and also a woman ({combination[3]}), with dress type ({combination[4]}) and age ({combination[5]}), financial situations ({combination[6]}), make area of picture based on the elemnts. **while very very emphasizing on maintaining the core scenario**: **"{base_prompt}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
+    base_scenario = f"Include vivid, sharp details for a man with skin color ({combination[0]}), attire ({combination[1]}), and age ({combination[2]}) and a woman with skin color ({combination[3]}), attire ({combination[4]}), and age ({combination[5]}). Reflect their financial situations ({combination[6]}) in the context of the scene. Emphasize clear, realistic representations of their expressions, the textures of their clothes, and the surrounding environment. Prioritize natural lighting and lifelike details to bring the scene to life."
     if "[Single Woman]" in base_prompt:
-        enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for woman ({combination[3]}), with dress type ({combination[4]}) and age ({combination[5]}), financial situations ({combination[6]}), make area of picture based on the elemnts. **while very very emphasizing on maintaining the core scenario**: **"{base_prompt}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
+        base_scenario = f"Focus on a woman with skin color ({combination[3]}), attire ({combination[4]}), and age ({combination[5]}), representing her financial situation ({combination[6]}). Ensure the description vividly captures her expression, the fabric of her clothing, and her setting in high definition. Emphasize natural lighting and realistic, clear details to enrich the scene's authenticity."
     if "[Single Man]" in base_prompt:
-        enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for man ({combination[0]}) with dress type ({combination[1]}) and age ({combination[2]}), financial situations ({combination[6]}), make area of picture based on the elemnts. **while very very emphasizing on maintaining the core scenario**: **"{base_prompt}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
+        base_scenario = f"Detail a man with skin color ({combination[0]}), attire ({combination[1]}), and age ({combination[2]}), considering his financial status ({combination[6]}). Describe with clarity his facial features, attire texture, and environment. Use realistic, sharp descriptions to highlight natural lighting and the scene's lifelike qualities."
+    enhancement_request = f"Enhance '{base_prompt}' by integrating: {base_scenario} Maintain the core scenario, focusing on creating a deeply immersive, fully realized, ultra-detailed image. Limit to 470 characters."
     body = {
         "model": model,
-        "options": {"temperature": 0.64},
+        "options": {"temperature": 0.61},
         "messages": [
             {
                 "role": "system",
-                "content": "Hello, I am an AI assistant specialized in enhancing different, diversed and variation of prompts for realistic and detailed image generation. Please provide a brief description or scenario, and I will enhance it to create a more vivid and detailed prompt (max-length 470 characters) suitable for generating high-quality images. For example, you can start with a simple scene like 'a cat sitting on a windowsill' and I'll add more details to it. ",
+                "content": "Hello, I am an AI assistant specialized in enhancing prompts for creating highly realistic, detailed, and vivid images. Provide a scenario, and I'll refine it to maximize clarity and lifelike details for image generation. Start with a simple scene for detailed enhancement."
             },
             {"role": "user", "content": enhancement_request},
         ],
@@ -100,7 +101,7 @@ def enhance_prompt(
                     )
                     print(similarity)
                     if similarity > similarity_threshold:
-                        body["options"]["temperature"] += 0.03
+                        body["options"]["temperature"] += 0.02
                         logging.warning("Similar Prompt")
                         break
                 else:

@@ -71,12 +71,12 @@ def set_users_with_credits(users):
         json.dump(users, file, indent=4)
 
 
-def process_prompt(prompt, path, output):
+def process_prompt(prompt, path, output, caption_output_path):
     users = get_users_with_credits()
     for user in users:
         if user["credits"] > 0:
             logined = login_to_bing(user["email"], user["password"])
-            downloaded = download_images(user, prompt, path, output)
+            downloaded = download_images(user, prompt, path, output, caption_output_path)
             if logined and downloaded:
                 break
             else:
@@ -174,7 +174,7 @@ def update_user_credits():
         print(e)
 
 
-def download_images(user, prompt, path, output, max_images=4):
+def download_images(user, prompt, path, output, caption_output_path, max_images=4):
     ensure_directory_exists(path)
     driver = get_or_create_driver("https://www.bing.com/images/create")
     try:
@@ -206,6 +206,7 @@ def download_images(user, prompt, path, output, max_images=4):
             if not os.path.exists(filename):
                 request.urlretrieve(full_size, filename)
                 logging.info(f"Downloaded {filename}")
+                pd.DataFrame(output).to_csv(caption_output_path, sep="|")
         return True
 
     except TimeoutException:
@@ -213,7 +214,7 @@ def download_images(user, prompt, path, output, max_images=4):
         return False
 
 
-def process(prompts, opath):
+def process(prompts, opath, caption_output_path=None):
     if should_update_credits():
         update_user_credits()
         log_credit_update()
@@ -222,9 +223,11 @@ def process(prompts, opath):
     driver = get_or_create_driver("https://www.bing.com/images/create")
     try:
         for prompt in prompts:
-            process_prompt(prompt, opath, output)
+            process_prompt(prompt, opath, output, caption_output_path)
     finally:
-        pd.DataFrame(output).to_csv(opath + "/caption.csv", sep="|")
+        if caption_output_path is None:
+            caption_output_path = opath + "/caption.csv"
+        pd.DataFrame(output).to_csv(caption_output_path, sep="|")
 
 
 if __name__ == "__main__":

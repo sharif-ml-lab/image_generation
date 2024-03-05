@@ -1,0 +1,13 @@
+{
+    "craft shop": ["browsing supplies", "attending a workshop"],
+    "home": ["watching TV", "cooking", "reading"],
+    "boutique": ["trying on clothes", "window shopping"],
+    "city": ["walking", "shopping"],
+    "salon": ["getting a haircut", "waiting"],
+    "park": ["walking", "picnicking"],
+    "backyard": ["gardening", "relaxing"],
+    "shooting range": ["practicing", "learning safety"],
+    "bar": ["socializing", "watching a game"],
+    "lake": ["boating", "cooking"],
+    "office": ["working", "meeting"]
+  }  

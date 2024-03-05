@@ -15,6 +15,7 @@ from nltk import word_tokenize
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+bertscore = BERTScore()
 nltk.download("punkt", download_dir="/home/mohammadreza/nltk_data")
 nltk.download("wordnet", download_dir="/home/mohammadreza/nltk_data")
 
@@ -60,14 +61,17 @@ def calculate_meteor(loader, has_tqdm=True, base_prompt=""):
     return np.array(similairties).mean()
 
 
+def similarity_matrix(prompt, base_prompt):
+    scores = bertscore([prompt], [base_prompt])["f1"].cpu().numpy()
+    return scores
+
+
 def calculate_bert(loader, has_tqdm=True, base_prompt=""):
     prompts = []
     for prompt_batch in loader:
         prompts.append(prompt_batch[0])
-    bertscore = BERTScore()
     scores = bertscore(prompts, [base_prompt])["f1"].cpu().numpy()
     return np.array(scores).mean()
-
 
 def calculate_classic_nlp(loader, has_tqdm=True, base_prompt=""):
     bleu = calculate_bleu(loader, base_prompt=base_prompt)

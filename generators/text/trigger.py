@@ -19,6 +19,7 @@ def generate_text(output_path, model, base_prompt, count):
         gen_prompt = generate(base_prompt, prompts, combination, model="llama2:70b")
         prompts.append(gen_prompt)
     pd.DataFrame({"caption": prompts}).to_csv(output_path, index=False)
+    return prompts
 
 
 def summarize_text(loader, output_path, model, maintain_prompt):

@@ -70,6 +70,7 @@ class PipeDataset(Dataset):
             self.captions.iloc[idx]["subject"],
             self.captions.iloc[idx]["object"],
             self.captions.iloc[idx]["activity"],
+            self.captions.iloc[idx]["areas"]
         )
 
 
@@ -104,3 +105,8 @@ class Loader:
     def load_texts(captions, batch_size, shuffle=False):
         text_dataset = TextDataset(captions)
         return DataLoader(text_dataset, batch_size=batch_size, shuffle=shuffle)
+
+    @staticmethod
+    def load_pipe(captions, batch_size, shuffle=False):
+        pipe_dataset = PipeDataset(captions)
+        return DataLoader(pipe_dataset, batch_size=batch_size, shuffle=shuffle)

@@ -25,28 +25,39 @@ skin_colors_women = [
     "dark-skinned woman",
 ]
 dress_types_women = [
-    "casual-wear woman",
-    "formal-attire woman",
-    "traditional-outfit woman",
-    "sportswear woman",
-    "business-casual woman",
+    "Casual wear for women",
+    "Formal attire for women",
+    "Traditional attire for women",
+    "Activewear for women",
+    "Business casual for women"
 ]
 dress_types_men = [
-    "casual-wear man",
-    "formal-attire man",
-    "traditional-outfit man",
-    "sportswear man",
-    "business-casual man",
+    "Casual wear for men",
+    "Formal attire for men",
+    "Traditional attire for men",
+    "Activewear for men",
+    "Business casual for men"
 ]
 financial_situations = [
-    "poor",
-    "low-income",
-    "middle class",
-    "wealthy",
-    "financially struggling",
+    "Economically disadvantaged",
+    "Living comfortably",
+    "Financially aspiring",
+    "Financial independence",
 ]
-ages_man = ["young", "middle-aged adult", "senior citizen"]
-ages_woman = ["young", "middle-aged adult", "senior citizen"]
+ages_man = [
+    "Teenager",
+    "Young adult",
+    "Adult",
+    "Middle-aged",
+    "Senior"
+]
+ages_woman = [
+    "Teenager",
+    "Young adult",
+    "Adult",
+    "Middle-aged",
+    "Senior"
+]
 
 
 def sample_from_clusters(total_samples):

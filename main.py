@@ -106,7 +106,7 @@ if __name__ == "__main__":
     import handlers.generators as generator_handlers
     import handlers.metrics as metric_handlers
     import handlers.experiments as experiment_handlers
-    import handlers.pipelines as piepline_handlers
+    import handlers.pipelines as pipeline_handlers
 
     parser = argparse.ArgumentParser(
         description="Sharif ML-Lab Data Generation ToolKit"
