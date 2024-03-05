@@ -76,7 +76,9 @@ def process_prompt(prompt, path, output, caption_output_path):
     for user in users:
         if user["credits"] > 0:
             logined = login_to_bing(user["email"], user["password"])
-            downloaded = download_images(user, prompt, path, output, caption_output_path)
+            downloaded = download_images(
+                user, prompt, path, output, caption_output_path
+            )
             if logined and downloaded:
                 break
             else:

@@ -29,14 +29,14 @@ dress_types_women = [
     "Formal attire for women",
     "Traditional attire for women",
     "Activewear for women",
-    "Business casual for women"
+    "Business casual for women",
 ]
 dress_types_men = [
     "Casual wear for men",
     "Formal attire for men",
     "Traditional attire for men",
     "Activewear for men",
-    "Business casual for men"
+    "Business casual for men",
 ]
 financial_situations = [
     "Economically disadvantaged",
@@ -44,20 +44,8 @@ financial_situations = [
     "Financially aspiring",
     "Financial independence",
 ]
-ages_man = [
-    "Teenager",
-    "Young adult",
-    "Adult",
-    "Middle-aged",
-    "Senior"
-]
-ages_woman = [
-    "Teenager",
-    "Young adult",
-    "Adult",
-    "Middle-aged",
-    "Senior"
-]
+ages_man = ["Teenager", "Young adult", "Adult", "Middle-aged", "Senior"]
+ages_woman = ["Teenager", "Young adult", "Adult", "Middle-aged", "Senior"]
 
 
 def sample_from_clusters(total_samples):

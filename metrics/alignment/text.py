@@ -73,6 +73,7 @@ def calculate_bert(loader, has_tqdm=True, base_prompt=""):
     scores = bertscore(prompts, [base_prompt])["f1"].cpu().numpy()
     return np.array(scores).mean()
 
+
 def calculate_classic_nlp(loader, has_tqdm=True, base_prompt=""):
     bleu = calculate_bleu(loader, base_prompt=base_prompt)
     meteor = calculate_meteor(loader, base_prompt=base_prompt)

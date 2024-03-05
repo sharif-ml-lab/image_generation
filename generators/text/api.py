@@ -79,7 +79,7 @@ def enhance_prompt(
         "messages": [
             {
                 "role": "system",
-                "content": "Hello, I am an AI assistant specialized in enhancing prompts for creating highly realistic, detailed, and vivid images. Provide a scenario, and I'll refine it to maximize clarity and lifelike details for image generation. Start with a simple scene for detailed enhancement."
+                "content": "Hello, I am an AI assistant specialized in enhancing prompts for creating highly realistic, detailed, and vivid images. Provide a scenario, and I'll refine it to maximize clarity and lifelike details for image generation. Start with a simple scene for detailed enhancement.",
             },
             {"role": "user", "content": enhancement_request},
         ],
