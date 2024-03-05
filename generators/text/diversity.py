@@ -82,7 +82,7 @@ def find_optimal_clusters(X, max_clusters):
     best_silhouette = -1
     best_n_clusters = 2
     best_kmeans = None
-    for n_clusters in range(5, min(max_clusters, X.shape[0])): 
+    for n_clusters in range(5, min(max_clusters, X.shape[0])):
         kmeans = KMeans(n_clusters=n_clusters, random_state=10).fit(X)
         labels = kmeans.labels_
         silhouette_avg = silhouette_score(X, labels)
@@ -114,7 +114,7 @@ def save_cluster_data(filename="utils/data/text/cluster.pkl"):
             encoded_combinations.append(
                 encoder(",".join(combinations[i])).cpu().numpy()
             )
-    
+
     encoded_combinations = np.array(encoded_combinations)
     num_clusters, kmeans = find_optimal_clusters(encoded_combinations, 30)
 

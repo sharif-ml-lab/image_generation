@@ -13,7 +13,14 @@ def calculate_clip_similarity(loader):
     similarities = []
 
     for image_batch, caption_batch in tqdm(loader, desc="Calculating Clip Distance"):
-        distance = image_caption_similarity(image_batch[0], caption_batch[0])
+        image = transforms.ToPILImage()(image_batch[0])
+        caption = caption_batch[0]
+        false_caption = (
+            caption.replace("man", "zzzman")
+            .replace("woman", "man")
+            .replace("zzzman", "woman")
+        )
+        distance = image_caption_similarity(image, [caption, false_caption])[0]
         if distance is not None:
             similarities.append(distance)
 

@@ -37,11 +37,11 @@ class VlitBaseVQA(VQA):
         )
 
     def forward(self, image, text):
-        inputs = self.processor(image, text, return_tensors="pt").to(DEVICE)
+        inputs = self.processor(image, text, return_tensors="pt").to(self.device)
         outputs = self.model(**inputs)
         logits = outputs.logits
         idx = logits.argmax(-1).item()
-        return model.config.id2label[idx]
+        return self.model.config.id2label[idx]
 
 
 class FlanXlVQA(VQA):

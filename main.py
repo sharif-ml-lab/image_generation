@@ -90,6 +90,11 @@ def main(
             if method == "noise":
                 experiment_handlers.noise_handler(prompt, neg_prompt)
 
+    elif space == "pipeline":
+        if data == "image":
+            if method == "full":
+                pipeline_handlers.full_generation(cpath, opath)
+
     print("\n".join(output))
 
 
@@ -101,6 +106,7 @@ if __name__ == "__main__":
     import handlers.generators as generator_handlers
     import handlers.metrics as metric_handlers
     import handlers.experiments as experiment_handlers
+    import handlers.pipelines as piepline_handlers
 
     parser = argparse.ArgumentParser(
         description="Sharif ML-Lab Data Generation ToolKit"

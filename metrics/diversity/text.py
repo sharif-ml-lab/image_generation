@@ -15,9 +15,7 @@ def calculate_bert_diversity(loader):
     for i in tqdm(range(1, size), desc="Calculating BERT"):
         text1 = loader.dataset[i]
         text2 = loader.dataset[i - 1]
-        similarity[i] = (
-            bertscore([text1], [text2])["f1"].cpu().numpy()
-        )
+        similarity[i] = bertscore([text1], [text2])["f1"].cpu().numpy()
     flat = similarity.ravel()
     flat_non_zero = flat[flat != 0]
 

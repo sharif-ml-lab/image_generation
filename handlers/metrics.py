@@ -81,7 +81,7 @@ def clip_handler(gpath, cpath):
     return f"Mean CLIP: {mean_cosine:.3}, SD: {std_cosine:.3}"
 
 
-def vqa_handler(gpath, model):
+def vqa_handler(gpath, cpath, model):
     generated_dataset = Loader.load(gpath, batch_size=1)
     mean_vqa, std_vqa = vqa_alignment_metric(generated_dataset, model)
     return f"Mean VQA: {mean_vqa:.3}, SD: {std_vqa:.3}"

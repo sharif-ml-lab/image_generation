@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader, Dataset
 from PIL import Image
 
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda:1" if torch.cuda.is_available() else "cpu"
 
 
 class ImageFolderDataset(Dataset):
@@ -32,12 +32,11 @@ class ImageFolderDataset(Dataset):
 class ImageCaptionDataset(ImageFolderDataset):
     def __init__(self, folder_path, captions_file, transform=None):
         super(ImageCaptionDataset, self).__init__(folder_path, transform)
-        self.captions = pd.read_csv(captions_file, sep="|")
+        self.captions = pd.read_csv(captions_file, sep=",")
         self.transform = transform
 
     def __getitem__(self, idx):
         image = Image.open(self.file_list[idx]).convert("RGB")
-        image = np.array(image)
         if self.transform:
             image = self.transform(image).to(DEVICE)
         image_name = self.file_list[idx].split("/")[-1]
@@ -57,6 +56,23 @@ class TextDataset(Dataset):
         return self.captions.iloc[idx]["caption"]
 
 
+class PipeDataset(Dataset):
+    def __init__(self, captions_file):
+        self.captions = pd.read_csv(
+            captions_file,
+        )
+
+    def __len__(self):
+        return len(self.captions)
+
+    def __getitem__(self, idx):
+        return (
+            self.captions.iloc[idx]["subject"],
+            self.captions.iloc[idx]["object"],
+            self.captions.iloc[idx]["activity"],
+        )
+
+
 class Loader:
     @staticmethod
     def load(path, batch_size, tan_scale=False, shuffle=False):
@@ -64,7 +80,7 @@ class Loader:
         std = [0.229, 0.224, 0.225] if not tan_scale else [0.5, 0.5, 0.5]
         transform = transforms.Compose(
             [
-                transforms.Resize((229, 229)),
+                transforms.Resize((1024, 1024)),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=mean, std=std),
             ]
@@ -73,19 +89,15 @@ class Loader:
         return DataLoader(generated_dataset, batch_size=batch_size, shuffle=shuffle)
 
     @staticmethod
-    def load_captions(path, captions, batch_size, do_transform=False, shuffle=False):
+    def load_captions(path, captions, batch_size, shuffle=False):
         transform = None
-        if do_transform:
-            mean = [0.485, 0.456, 0.406]
-            std = [0.229, 0.224, 0.225]
-            transform = transforms.Compose(
-                [
-                    transforms.Resize((229, 229)),
-                    transforms.ToTensor(),
-                    transforms.Normalize(mean=mean, std=std),
-                ]
-            )
-        generated_dataset = ImageCaptionDataset(path, captions, transform=None)
+        transform = transforms.Compose(
+            [
+                transforms.Resize((1024, 1024)),
+                transforms.ToTensor(),
+            ]
+        )
+        generated_dataset = ImageCaptionDataset(path, captions, transform=transform)
         return DataLoader(generated_dataset, batch_size=batch_size, shuffle=shuffle)
 
     @staticmethod

@@ -4,7 +4,7 @@ import torch
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-from functools import lru_cache, partialmethod
+from functools import lru_cache
 from skimage.feature import graycomatrix, graycoprops
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
@@ -84,7 +84,7 @@ def get_image_array(fake):
 
 @lru_cache(None)
 def build_gmm():
-    matrix_coco = np.array(pd.read_csv("utils/data/realism/realism_coco.csv"))
+    matrix_coco = np.array(pd.read_csv("utils/data/realism/realism_coco_human.csv"))
     scaler = StandardScaler()
     scaled_data = scaler.fit_transform(matrix_coco)
     gmm = GaussianMixture(n_components=5, random_state=0)

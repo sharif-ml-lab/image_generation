@@ -196,7 +196,7 @@ def download_images(user, prompt, path, output, max_images=4):
         images = driver.find_elements(By.XPATH, '//img[@class="mimg"]')
         random_id = shortuuid.ShortUUID().random(length=8)
         for idx, img in enumerate(images[:max_images], start=1):
-            output["img_path"].append(f"{random_id}-{idx}.jpg")
+            output["image_name"].append(f"{random_id}-{idx}.jpg")
             output["caption"].append(prompt)
             src = img.get_attribute("src")
             img_id = src.split("/")[-1].split("?")[0]
@@ -218,13 +218,13 @@ def process(prompts, opath):
         update_user_credits()
         log_credit_update()
 
-    output = {"img_path": [], "caption": []}
+    output = {"image_name": [], "caption": []}
     driver = get_or_create_driver("https://www.bing.com/images/create")
     try:
         for prompt in prompts:
             process_prompt(prompt, opath, output)
     finally:
-        pd.DataFrame(output).to_csv(opath + "/caption.csv")
+        pd.DataFrame(output).to_csv(opath + "/caption.csv", sep="|")
 
 
 if __name__ == "__main__":

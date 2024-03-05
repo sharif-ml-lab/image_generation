@@ -8,7 +8,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def vqa_alignment_metric(
-    loader_fake, model_name="vlit", subject="man", relation="driving"
+    loader_fake, model_name="vlit", subject="man", relation="beading_earrings"
 ):
     scores = []
     questions = [
