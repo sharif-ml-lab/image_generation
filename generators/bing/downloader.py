@@ -188,6 +188,7 @@ def download_images(user, prompt, path, output, caption_output_path, max_images=
         logging.warning(f"Credits: {credit}")
 
         inp = driver.find_element(By.ID, "sb_form_q")
+        prompt = f"create ultra-detailed image of {prompt}"
         inp.send_keys(prompt + Keys.RETURN)
         new_credits = user["credits"] - 1
         update_user_credit_in_file(user["email"], new_credits)
