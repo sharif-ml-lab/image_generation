@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader, Dataset
 from PIL import Image
 
 
-DEVICE = "cuda:1" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 class ImageFolderDataset(Dataset):

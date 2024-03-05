@@ -6,9 +6,13 @@ from PIL import Image
 import requests
 from transformers import AutoProcessor, VipLlavaForConditionalGeneration
 
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+
 model = VipLlavaForConditionalGeneration.from_pretrained(
     "llava-hf/vip-llava-7b-hf", torch_dtype=torch.float16
-).to("cuda")
+).to(DEVICE)
 processor = AutoProcessor.from_pretrained("llava-hf/vip-llava-7b-hf")
 
 prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives number as output like 0,1,2,... ###Human: <image>\n{}###Assistant:"

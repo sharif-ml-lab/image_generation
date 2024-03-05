@@ -31,5 +31,4 @@ def tendency_experiment(loader, prompt, neg_prompt):
                 result["negative"].append(mean_negative)
                 del model
                 torch.cuda.empty_cache()
-                print(f"{base_name}_{model_name}", "Done")
     pd.DataFrame(result).to_csv("tendency_experiment.csv", index=False)

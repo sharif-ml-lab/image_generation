@@ -1,3 +1,3 @@
-def generate(loader, opath):
+def fire(loader, opath):
     for i in loader:
         print(loader)

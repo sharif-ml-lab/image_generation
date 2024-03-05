@@ -9,7 +9,7 @@ from utils.censors.censorship import censor_similar_part
 from tqdm import tqdm
 
 
-DEVICE = "cuda:1" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def calculate_image_diversity(loader):
