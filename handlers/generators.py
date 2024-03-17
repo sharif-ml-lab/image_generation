@@ -2,7 +2,7 @@ from utils.load import Loader
 
 from generators.sdm.trigger import generate_image_with_sdm
 from generators.juggernaut.trigger import generate_image_with_juggernaut
-from generators.bing.trigger import generate_image_with_bing
+from generators.bing.trigger import generate_image_with_bing, update_bing_credit
 
 from generators.text.trigger import generate_text, summarize_text
 from generators.text.diversity import save_cluster_data
@@ -32,3 +32,7 @@ def llm_diversity_handler():
 def bing_handler(cpath, opath):
     loader = Loader.load_texts(cpath, batch_size=1)
     generate_image_with_bing(loader, opath)
+
+
+def update_bing():
+    update_bing_credit()

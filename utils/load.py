@@ -70,7 +70,7 @@ class PipeDataset(Dataset):
             self.captions.iloc[idx]["subject"],
             self.captions.iloc[idx]["object"],
             self.captions.iloc[idx]["activity"],
-            self.captions.iloc[idx]["areas"],
+            self.captions.iloc[idx]["mode"],
         )
 
 

@@ -23,7 +23,7 @@ LOG_FILE_PATH = "utils/data/bing/update.log"
 USERS_FILE_PATH = "utils/data/bing/users.json"
 headless = True
 global_driver = None
-
+logined_user = None
 
 def get_or_create_driver(url, should_reset=False):
     global global_driver, headless
@@ -33,7 +33,7 @@ def get_or_create_driver(url, should_reset=False):
         or not global_driver.service.is_connectable()
     ):
         options = Options()
-        options.add_argument(f'--proxy-server="{get_proxy()}"')
+        # options.add_argument(f'--proxy-server="{get_proxy()}"')
         if headless:
             options.add_argument("--headless")
         global_driver = webdriver.Firefox(options=options)
@@ -79,15 +79,16 @@ def process_prompt(prompt, path, output, caption_output_path):
             downloaded = download_images(
                 user, prompt, path, output, caption_output_path
             )
-            if logined and downloaded:
-                break
-            else:
-                continue
+            print(prompt, user)
+            break
         else:
             logging.info(f"Skipping user {user['email']} due to insufficient credits.")
 
 
 def login_to_bing(username, password):
+    global logined_user
+    if username == logined_user:
+        return True
     driver = get_or_create_driver(
         "https://www.bing.com/images/create", should_reset=True
     )
@@ -124,6 +125,7 @@ def login_to_bing(username, password):
         ).click()
         time.sleep(10)
         logging.info(f"Logined {username}")
+        logined_user = username
         return True
     except:
         logging.warning(f"Can Not Login: {username}")
@@ -179,24 +181,29 @@ def update_user_credits():
 def download_images(user, prompt, path, output, caption_output_path, max_images=4):
     ensure_directory_exists(path)
     driver = get_or_create_driver("https://www.bing.com/images/create")
+    driver.get("https://www.bing.com/images/create")
+    time.sleep(8)
     try:
         credit = int(
-            WebDriverWait(driver, 10)
+            WebDriverWait(driver, 15)
             .until(EC.element_to_be_clickable((By.ID, "token_bal")))
             .text
         )
         logging.warning(f"Credits: {credit}")
 
         inp = driver.find_element(By.ID, "sb_form_q")
-        prompt = f"create ultra-detailed image of {prompt}"
+        print('Input', inp)
+        prompt = f"{prompt}"
         inp.send_keys(prompt + Keys.RETURN)
         new_credits = user["credits"] - 1
         update_user_credit_in_file(user["email"], new_credits)
 
-        WebDriverWait(driver, 80).until(
-            EC.presence_of_all_elements_located((By.XPATH, '//img[@class="mimg"]'))
+        WebDriverWait(driver, 60).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, '.mimg'))
         )
-        images = driver.find_elements(By.XPATH, '//img[@class="mimg"]')
+        print("OK!!!!!!!!!!!!!")
+        images = driver.find_elements(By.CSS_SELECTOR, '.mimg')
+        print('Image', images)
         random_id = shortuuid.ShortUUID().random(length=8)
         for idx, img in enumerate(images[:max_images], start=1):
             output["image_name"].append(f"{random_id}-{idx}.jpg")
@@ -207,13 +214,17 @@ def download_images(user, prompt, path, output, caption_output_path, max_images=
 
             filename = os.path.join(path, f"{random_id}-{idx}.jpg")
             if not os.path.exists(filename):
-                request.urlretrieve(full_size, filename)
+                try:
+                    request.urlretrieve(full_size, filename)
+                except Exception as e:
+                    print(e)
+                    pass
                 logging.info(f"Downloaded {filename}")
                 pd.DataFrame(output).to_csv(caption_output_path, sep="|")
         return True
 
-    except TimeoutException:
-        logging.error("Failed to load page or find elements")
+    except Exception as e:
+        logging.error(str(e), "Failed to load page or find elements")
         return False
 
 
@@ -233,6 +244,6 @@ def process(prompts, opath, caption_output_path=None):
         pd.DataFrame(output).to_csv(caption_output_path, sep="|")
 
 
-if __name__ == "__main__":
+def update():
     update_user_credits()
     log_credit_update()

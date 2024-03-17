@@ -70,6 +70,9 @@ def main(
             if method == "bing":
                 if task == "dalle3":
                     generator_handlers.bing_handler(cpath, opath)
+            if method == "config":
+                if task == "update-credit":
+                    generator_handlers.update_bing()
 
         elif data == "text":
             if method == "llm":

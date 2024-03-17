@@ -4,8 +4,8 @@ from tqdm import tqdm
 from torchmetrics.text.bert import BERTScore
 
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-bertscore = BERTScore()
+DEVICE = "cuda:1" if torch.cuda.is_available() else "cpu"
+bertscore = BERTScore(device=DEVICE)
 
 
 def calculate_bert_diversity(loader):
@@ -25,14 +25,15 @@ def calculate_bert_diversity(loader):
 def diversity_matrix(prompts):
     size = len(prompts)
     diversity_matrix = np.zeros(size)
-
+    similarity = np.zeros((size, size))
     for i in tqdm(range(size), desc="Calculating BERT"):
-        similarity = np.zeros(size)
-        for j in range(size):
-            if i != j:
-                similarity[i] = (
-                    1 - bertscore([prompts[i]], [prompts[j]])["f1"].cpu().numpy()
-                )
-        similarity = similarity[similarity != 0]
-        diversity_matrix[i] = similarity.mean()
+        for j in tqdm(range(i), desc="Calculating Individual BERT"):
+            similarity[i, j] = (
+                1 - bertscore([prompts[i]], [prompts[j]])["f1"].cpu().numpy()
+            )
+
+    for i in range(size):
+        col_sim = similarity[:, i]
+        diversity_matrix[i] = col_sim[col_sim != 0].mean()
+
     return diversity_matrix

@@ -26,7 +26,7 @@ def get_proxy():
     soup = BeautifulSoup(response.text, "html.parser")
 
     proxies = []
-    for row in soup.find("table", {"class": "table"}).find_all("tr")[1:15]:
+    for row in soup.find("table", {"class": "table"}).find_all("tr")[:15]:
         tds = row.find_all("td")
         try:
             ip = tds[0].text.strip()

@@ -67,15 +67,14 @@ def summarize(maintain_prompt, text, max_lengh=460, model="llama2:70b"):
 def enhance_prompt(
     base_prompt, previous_prompts, model, combination, similarity_threshold=0.975
 ):
-    base_scenario = f"Include vivid, sharp details for a man with skin color ({combination[0]}), attire ({combination[1]}), and age ({combination[2]}) and a woman with skin color ({combination[3]}), attire ({combination[4]}), and age ({combination[5]}). Reflect their financial situations ({combination[6]}) in the context of the scene. Emphasize clear, realistic representations of their expressions, the textures of their clothes, and the surrounding environment. Prioritize natural lighting and lifelike details to bring the scene to life."
+    enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for a man ({combination[0]}) with dress type ({combination[1]}) and age ({combination[2]}) and also a woman ({combination[3]}), with dress type ({combination[4]}) and age ({combination[5]}), financial situations ({combination[6]}), make area of picture based on the elemnts. **while very very emphasizing on maintaining the core scenario**: **"{base_prompt}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
     if "[Single Woman]" in base_prompt:
-        base_scenario = f"Focus on a woman with skin color ({combination[3]}), attire ({combination[4]}), and age ({combination[5]}), representing her financial situation ({combination[6]}). Ensure the description vividly captures her expression, the fabric of her clothing, and her setting in high definition. Emphasize natural lighting and realistic, clear details to enrich the scene's authenticity."
+        enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for woman ({combination[3]}), with dress type ({combination[4]}) and age ({combination[5]}), financial situations ({combination[6]}), make area of picture based on the elemnts. **while very very emphasizing on maintaining the core scenario**: **"{base_prompt}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
     if "[Single Man]" in base_prompt:
-        base_scenario = f"Detail a man with skin color ({combination[0]}), attire ({combination[1]}), and age ({combination[2]}), considering his financial status ({combination[6]}). Describe with clarity his facial features, attire texture, and environment. Use realistic, sharp descriptions to highlight natural lighting and the scene's lifelike qualities."
-    enhancement_request = f"Enhance '{base_prompt}' by integrating: {base_scenario} Maintain the core scenario, focusing on creating a deeply immersive, fully realized, ultra-detailed image. Limit to 470 characters."
+        enhancement_request = f'Enhance the following prompt by adding elements of diversity in skin color for man ({combination[0]}) with dress type ({combination[1]}) and age ({combination[2]}), financial situations ({combination[6]}), make area of picture based on the elemnts. **while very very emphasizing on maintaining the core scenario**: **"{base_prompt}"**. Include fully-details that vividly depict the real environment and the individuals circumstances. Output the final result prompt (max-length 470 characters) in a string format enclosed within double quotation marks.'
     body = {
         "model": model,
-        "options": {"temperature": 0.61},
+        "options": {"temperature": 0.63},
         "messages": [
             {
                 "role": "system",
@@ -101,7 +100,7 @@ def enhance_prompt(
                     )
                     print(similarity)
                     if similarity > similarity_threshold:
-                        body["options"]["temperature"] += 0.02
+                        body["options"]["temperature"] += 0.03
                         logging.warning("Similar Prompt")
                         break
                 else:

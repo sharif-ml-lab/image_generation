@@ -5,6 +5,7 @@ pillow
 numpy 
 pandas
 scipy 
+openai
 requests
 bert-score
 nltk
