@@ -25,6 +25,7 @@ headless = True
 global_driver = None
 logined_user = None
 
+
 def get_or_create_driver(url, should_reset=False):
     global global_driver, headless
     if (
@@ -33,7 +34,7 @@ def get_or_create_driver(url, should_reset=False):
         or not global_driver.service.is_connectable()
     ):
         options = Options()
-        # options.add_argument(f'--proxy-server="{get_proxy()}"')
+        options.add_argument(f'--proxy-server="{get_proxy()}"')
         if headless:
             options.add_argument("--headless")
         global_driver = webdriver.Firefox(options=options)
@@ -192,18 +193,18 @@ def download_images(user, prompt, path, output, caption_output_path, max_images=
         logging.warning(f"Credits: {credit}")
 
         inp = driver.find_element(By.ID, "sb_form_q")
-        print('Input', inp)
+        print("Input", inp)
         prompt = f"{prompt}"
         inp.send_keys(prompt + Keys.RETURN)
         new_credits = user["credits"] - 1
         update_user_credit_in_file(user["email"], new_credits)
 
         WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, '.mimg'))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, ".mimg"))
         )
         print("OK!!!!!!!!!!!!!")
-        images = driver.find_elements(By.CSS_SELECTOR, '.mimg')
-        print('Image', images)
+        images = driver.find_elements(By.CSS_SELECTOR, ".mimg")
+        print("Image", images)
         random_id = shortuuid.ShortUUID().random(length=8)
         for idx, img in enumerate(images[:max_images], start=1):
             output["image_name"].append(f"{random_id}-{idx}.jpg")

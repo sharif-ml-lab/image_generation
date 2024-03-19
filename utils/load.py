@@ -12,12 +12,18 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 class ImageFolderDataset(Dataset):
     def __init__(self, folder_path, transform=None):
-        self.file_list = [
-            os.path.join(folder_path, f)
-            for f in sorted(os.listdir(folder_path))
-            if os.path.isfile(os.path.join(folder_path, f))
-        ]
+        self.file_list = self._get_files_recursive(folder_path)
         self.transform = transform
+
+    def _get_files_recursive(self, folder_path):
+        files = []
+        for root, _, filenames in os.walk(folder_path):
+            for filename in filenames:
+                if filename.lower().endswith(
+                    (".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".gif")
+                ):
+                    files.append(os.path.join(root, filename))
+        return files
 
     def __len__(self):
         return len(self.file_list)

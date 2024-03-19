@@ -7,9 +7,11 @@ pandas
 scipy 
 openai
 requests
+facenet-pytorch
 bert-score
 nltk
 torchmetrics
+ultralytics
 torchvision
 opencv-python
 sentence-transformers

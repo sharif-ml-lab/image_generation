@@ -1,49 +1,39 @@
 import torch
 import numpy as np
 from scipy import linalg
-from torchvision import models
-from torchvision.models import Inception_V3_Weights
-
+from tqdm import tqdm
+from torchvision.transforms import functional as F
+from torchvision.models import Inception_V3_Weights, inception_v3
+from utils.models.embedding import SwinV2Tiny
+from torchmetrics.image.fid import FrechetInceptionDistance
+import torchvision.transforms as transforms
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+fid = FrechetInceptionDistance(feature=64)
 
 
 def calculate_frechet_inception_distance(loader_real, loader_fake):
     weights = Inception_V3_Weights.IMAGENET1K_V1
-    inception_model = models.inception_v3(weights=weights).to(DEVICE)
+    inception_model = inception_v3(
+        weights=weights, aux_logits=True, transform_input=False
+    ).to(DEVICE)
     inception_model.eval()
+    inception_model.fc = torch.nn.Identity()
 
-    real_features = []
-    fake_features = []
+    def get_features(loader):
+        features = []
+        for data_batch in tqdm(loader, desc="Embed", total=10):
+            with torch.no_grad():
+                features.append(data_batch[0].squeeze(0))
+        features = torch.stack(features, dim=0).to(torch.uint8).cpu()
+        return features
 
-    with torch.no_grad():
-        for real_images in loader_real:
-            real_images = real_images.to(DEVICE)
-            real_pred = inception_model(real_images)
-            real_features.append(real_pred)
+    real_features = get_features(loader_real)
+    print(real_features.shape)
+    fake_features = get_features(loader_fake)
 
-        for fake_images in loader_fake:
-            fake_images = fake_images.to(DEVICE)
-            fake_pred = inception_model(fake_images)
-            fake_features.append(fake_pred)
+    fid.update(real_features, real=True)
+    fid.update(fake_features, real=False)
 
-    real_features = torch.cat(real_features, 0).cpu().numpy()
-    fake_features = torch.cat(fake_features, 0).cpu().numpy()
-
-    mu_real, sigma_real = real_features.mean(axis=0), np.cov(
-        real_features, rowvar=False
-    )
-    mu_fake, sigma_fake = fake_features.mean(axis=0), np.cov(
-        fake_features, rowvar=False
-    )
-
-    ssdiff = np.sum((mu_real - mu_fake) ** 2.0)
-
-    covmean = linalg.sqrtm(sigma_real.dot(sigma_fake))
-
-    if np.iscomplexobj(covmean):
-        covmean = covmean.real
-
-    fid = ssdiff + np.trace(sigma_real + sigma_fake - 2.0 * covmean)
-
-    return fid
+    return float(fid.compute().cpu().numpy())

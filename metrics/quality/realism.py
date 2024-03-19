@@ -84,7 +84,7 @@ def get_image_array(fake):
 
 @lru_cache(None)
 def build_gmm():
-    matrix_coco = np.array(pd.read_csv("utils/data/realism/realism_coco_human.csv"))
+    matrix_coco = np.array(pd.read_csv("utils/data/realism/realism_coco.csv"))
     scaler = StandardScaler()
     scaled_data = scaler.fit_transform(matrix_coco)
     gmm = GaussianMixture(n_components=5, random_state=0)

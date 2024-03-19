@@ -1,49 +1,9 @@
-subject,object,activity
-woman,man,"beading earrings"
-man,woman,"climbing a tree"
-man,woman,"holding a gun"
-woman,man,"with a skirt"
-man,woman,"drinking beer"
-woman,man,"combing hair"
-man,woman,"catching fish"
-woman,man,"holding a baby"
-man,woman,"wearing a grey shirt"
-man,woman,"is opening fire"
-man,woman,"scoring a goal"
-man,woman,"leading a team"
-man,woman,"announcing his resignation"
-man,woman,"installing a panel"
-man,woman,"wearing a suit"
-man,woman,"playing chess"
-man,woman,"celebrating a victory"
-man,woman,"playing drums"
-man,woman,"watching luxury"
-man,woman,"facing charges"
-man,woman,"flying a kite"
-man,woman,"suffering an injury"
-man,woman,"ripping jeans"
-man,woman,"swimming in trunks"
-man,woman,"riding a motorcycle"
-man,woman,"telling tales"
-man,woman,"signing a contract"
-man,woman,"saving a life"
-woman,man,"choosing a dress"
-woman,man,"wearing a skirt"
-woman,man,"tying a dress"
-woman,man,"applying makeup"
-woman,man,"having photography"
-woman,man,"creating original shoes"
-woman,man,"baking bread"
-woman,man,"holding a bouquet"
-woman,man,"wearing a blouse"
-woman,man,"washing clothes"
-woman,man,"having a treatment"
-woman,man,"wrapping a gift"
-woman,man,"picking flowers"
-woman,man,"having a massage"
-woman,man,"choosing food"
-woman,man,"shouldering a handbag"
-woman,man,"preparing food"
-woman,man,"cutting a cake"
-woman,man,"casting a ballot"
-woman,man,"creating a doll"
+subject,object,activity,mode
+woman,man,knitting colorful scarves,single_exp|single_unx|double_exp|double_unx
+woman,man,baking a cake,single_exp|single_unx|double_exp|double_unx
+woman,man,skating in a roller derby,single_exp|single_unx|double_exp|double_unx
+woman,man,doing basket weaving,single_exp|single_unx|double_exp|double_unx
+woman,man,designing dress,single_exp|single_unx|double_exp|double_unx
+woman,man,spinning pottery,single_exp|single_unx|double_exp|double_unx
+woman,man,having face mask evening,single_exp|single_unx|double_exp|double_unx
+woman,man,doing professional makeup,single_exp|single_unx|double_exp|double_unx
