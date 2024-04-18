@@ -61,27 +61,10 @@ def main(
                     output.append(metric_handlers.classic_handler(cpath, prompt))
 
     elif space == "genai":
-        if data == "image":
-            if method == "sdm":
-                if task == "xlarge":
-                    generator_handlers.sdm_handler(opath, model, prompt, count)
-                if task == "juggernaut":
-                    generator_handlers.juggernaut_handler(opath, prompt, count)
-            if method == "bing":
-                if task == "dalle3":
-                    generator_handlers.bing_handler(cpath, opath)
-            if method == "config":
-                if task == "update-credit":
-                    generator_handlers.update_bing()
-
-        elif data == "text":
+        if data == "text":
             if method == "llm":
                 if task == "diverse":
                     generator_handlers.prompts_llm_handler(opath, model, prompt, count)
-                if task == "summarize":
-                    generator_handlers.summarize_llm_handler(
-                        cpath, opath, model, prompt
-                    )
             if method == "config":
                 if task == "llm-diversity":
                     generator_handlers.llm_diversity_handler()
@@ -94,7 +77,7 @@ def main(
                 experiment_handlers.noise_handler(prompt, neg_prompt)
 
     elif space == "pipeline":
-        if data == "image":
+        if data == "text":
             if method == "full":
                 pipeline_handlers.full_generation(cpath, opath)
 

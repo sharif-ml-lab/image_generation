@@ -20,20 +20,3 @@ def calculate_bert_diversity(loader):
     flat_non_zero = flat[flat != 0]
 
     return flat_non_zero.mean(), flat_non_zero.std()
-
-
-def diversity_matrix(prompts):
-    size = len(prompts)
-    diversity_matrix = np.zeros(size)
-    similarity = np.zeros((size, size))
-    for i in tqdm(range(size), desc="Calculating BERT"):
-        for j in tqdm(range(i), desc="Calculating Individual BERT"):
-            similarity[i, j] = (
-                1 - bertscore([prompts[i]], [prompts[j]])["f1"].cpu().numpy()
-            )
-
-    for i in range(size):
-        col_sim = similarity[:, i]
-        diversity_matrix[i] = col_sim[col_sim != 0].mean()
-
-    return diversity_matrix
