@@ -69,13 +69,6 @@ def main(
                 if task == "llm-diversity":
                     generator_handlers.llm_diversity_handler()
 
-    elif space == "experiment":
-        if data == "image":
-            if method == "tendency":
-                experiment_handlers.tendency_handler(gpath, prompt, neg_prompt)
-            if method == "noise":
-                experiment_handlers.noise_handler(prompt, neg_prompt)
-
     elif space == "pipeline":
         if data == "text":
             if method == "full":

@@ -59,9 +59,3 @@ def process_images(source_dir, target_dir):
 
             if detect_human_and_size(image_path):
                 shutil.copy(image_path, target_dir)
-
-
-source_dir = "/home/mohammadreza/MLLAB/Datasets/COCO/Human"
-target_dir = "/home/mohammadreza/MLLAB/Datasets/COCO/HumanActivity"
-
-process_images(source_dir, target_dir)
