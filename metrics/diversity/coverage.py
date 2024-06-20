@@ -44,7 +44,7 @@ def sample_real_features(real_features, num_samples):
 
 def calculate_image_diversity(loader_real, loader_fake):
     embedding_model = ViTLarge(DEVICE)
-    
+
     real_features = load_real_features(loader_real, embedding_model)
 
     fake_features = []
