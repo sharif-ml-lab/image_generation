@@ -33,32 +33,10 @@ def main(
             elif method == "diversity":
                 if all_task or task == "perceptual":
                     output.append(metric_handlers.perceptual_handler(gpath))
-                if all_task or task == "simemb":
-                    output.append(metric_handlers.sentence_image_handler(gpath))
+                if all_task or task == "coverage":
+                    output.append(metric_handlers.coverage_image_handler(gpath, rpath))
                 if all_task or task == "ssim":
                     output.append(metric_handlers.ssim_image_handler(gpath))
-                if all_task or task == "psnr":
-                    output.append(metric_handlers.psnr_handler(gpath))
-
-            elif method == "alignment":
-                if all_task or task == "clip":
-                    output.append(metric_handlers.clip_handler(gpath, cpath))
-                if all_task or task == "vqa":
-                    output.append(metric_handlers.vqa_handler(gpath, cpath, model))
-                if all_task or task == "captioning":
-                    output.append(metric_handlers.captioning_handler(gpath, cpath))
-
-        if data == "text":
-            if method == "diversity":
-                if all_task or task == "censor":
-                    output.append(metric_handlers.simemb_text_handler(cpath, prompt))
-                if all_task or task == "bert":
-                    output.append(metric_handlers.bert_diversity_handler(cpath))
-            elif method == "alignment":
-                if all_task or task == "sentence":
-                    output.append(metric_handlers.sentence_text_handler(cpath, prompt))
-                if all_task or task == "classic":
-                    output.append(metric_handlers.classic_handler(cpath, prompt))
 
     elif space == "genai":
         if data == "text":
@@ -84,7 +62,6 @@ if __name__ == "__main__":
 
     import handlers.generators as generator_handlers
     import handlers.metrics as metric_handlers
-    import handlers.experiments as experiment_handlers
     import handlers.pipelines as pipeline_handlers
 
     parser = argparse.ArgumentParser(

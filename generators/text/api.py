@@ -46,7 +46,6 @@ def enhance_prompt(
                     similarity = (
                         bertscore([enhanced_prompt], [prev_prompt])["f1"].cpu().numpy()
                     )
-                    print(similarity)
                     if similarity > similarity_threshold:
                         body["options"]["temperature"] += 0.03
                         logging.warning("Similar Prompt")

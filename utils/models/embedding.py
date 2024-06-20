@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from transformers import AutoImageProcessor, Swinv2Model
+from transformers import AutoImageProcessor, Swinv2Model, ViTImageProcessor, ViTModel
 from transformers import logging as transformers_logging
 
 
@@ -26,6 +26,24 @@ class SwinV2Tiny(Embedding):
         super(SwinV2Tiny, self).__init__(device)
         self.processor = AutoImageProcessor.from_pretrained(model_name)
         self.model = Swinv2Model.from_pretrained(model_name).to(self.device)
+
+    def forward(self, image):
+        with torch.no_grad():
+            inputs = self.processor(image, return_tensors="pt").to(self.device)
+            outputs = self.model(**inputs)
+            embedding = outputs.last_hidden_state
+        return embedding.reshape(1, -1)
+
+
+class ViTLarge(Embedding):
+    def __init__(
+        self,
+        device,
+        model_name="google/vit-base-patch16-224",
+    ):
+        super(ViTLarge, self).__init__(device)
+        self.processor = ViTImageProcessor.from_pretrained(model_name)
+        self.model = ViTModel.from_pretrained(model_name).to(self.device)
 
     def forward(self, image):
         with torch.no_grad():

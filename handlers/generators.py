@@ -1,6 +1,6 @@
 from utils.load import Loader
 
-from generators.text.trigger import generate_text, summarize_text
+from generators.text.trigger import generate_text
 from generators.text.diversity import save_cluster_data
 
 

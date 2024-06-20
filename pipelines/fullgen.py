@@ -6,8 +6,6 @@ from tqdm import tqdm
 
 
 PROMPT_PER_SCENARIO = 20
-with open("utils/data/text/neutral_activity.json") as io:
-    NEUTRALS = json.load(io)
 
 
 def fire(loader, opath):

@@ -5,7 +5,7 @@ import random
 import pandas as pd
 from tqdm import tqdm
 from utils.load import Loader
-from generators.text.api import generate, summarize
+from generators.text.api import generate
 from generators.text.diversity import sample_from_clusters
 
 

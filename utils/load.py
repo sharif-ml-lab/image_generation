@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import torch
-from torchvision import models, transforms
+from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset
 from PIL import Image
 
@@ -82,12 +82,12 @@ class PipeDataset(Dataset):
 
 class Loader:
     @staticmethod
-    def load(path, batch_size, tan_scale=False, shuffle=False):
+    def load(path, batch_size, img_size=1024, tan_scale=False, shuffle=False):
         mean = [0.485, 0.456, 0.406] if not tan_scale else [0.5, 0.5, 0.5]
         std = [0.229, 0.224, 0.225] if not tan_scale else [0.5, 0.5, 0.5]
         transform = transforms.Compose(
             [
-                transforms.Resize((1024, 1024)),
+                transforms.Resize((img_size, img_size)),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=mean, std=std),
             ]
